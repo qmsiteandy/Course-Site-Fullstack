@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Course Site</title>
+  </head>
+
+  <body>
+    <!-- header -->
+    <%- include("./basic/header.ejs") %>
+
+    <div class="content">
+      <div class="container mb-5">
+        <form class="login">
+          <div class="border-gray w-30 middle p-4 mt-5">
+            <h2 class="my-3 text-danger text-center">會員登入</h2>
+            <div class="middle mt-4 text-center">
+              <label for="account">帳號 ： </label>
+              <input class="account" name="account" placeholder="請輸入帳號" />
+            </div>
+            <div class="my-3 middle text-center">
+              <label for="password">密碼 ： </label>
+              <input
+                class="password"
+                name="password"
+                type="password"
+                placeholder="請輸入密碼"
+              />
+            </div>
+            <div class="middle text-center mb-1">
+              <!-- <span class="text-danger">
+                <%= typeof(custaccount) === 'undefined' && typeof(success) !==
+                'undefined' && !success ? "登入失敗，請重新輸入正確的帳號密碼！"
+                : "" %></span
+              > -->
+            </div>
+            <div class="text-center mb-4">
+              <button type="button" onclick="login()" class="btn btn-danger">
+                登入
+              </button>
+            </div>
+            <div class="text-center mb-2">
+              尚未加入會員，請點此<a href="/register">註冊</a>
+            </div>
+            <hr class="my-12" />
+
+            <div class="text-center text-secondary mb-2 mt-4">
+              使用社群帳號登入
+            </div>
+            <div class="text-center">
+              <button type="button" class="btn btn-outline-dark w-5">
+                <i class="fa-brands fa-google"></i>
+              </button>
+              <button type="button" class="btn btn-outline-dark w-5">
+                <i class="fa-brands fa-facebook-f"></i>
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- footer -->
+    <%- include("./basic/footer.ejs") %>
+  </body>
+</html>

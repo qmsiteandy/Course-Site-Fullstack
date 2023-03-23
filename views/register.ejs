@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Course Site</title>
+  </head>
+
+  <body>
+    <!-- header -->
+    <%- include("./basic/header.ejs") %>
+
+    <div class="content">
+      <div class="container mb-5">
+        <form class="login">
+          <div class="border-gray w-30 middle p-4 mt-5">
+            <h2 class="my-3 text-danger text-center">學員註冊</h2>
+            <div class="middle mt-4 text-center">
+              <label for="name">姓名 ： </label>
+              <input class="name" name="name" placeholder="請輸入姓名" />
+            </div>
+            <div class="mt-2 middle text-center">
+              <label for="account">帳號 ： </label>
+              <input class="account" name="account" placeholder="請輸入帳號" />
+            </div>
+            <div class="mt-2 middle text-center">
+              <label for="password">密碼 ： </label>
+              <input
+                class="password"
+                name="password"
+                type="password"
+                placeholder="請輸入密碼"
+              />
+            </div>
+            <div class="mt-2 middle text-center">
+              <label for="confirm-password">確認 ： </label>
+              <input
+                class="confirm-password"
+                name="confirm-password"
+                type="password"
+                placeholder="請再次輸入密碼"
+              />
+            </div>
+            <div class="text-center mt-4 mb-4">
+              <button type="button" onclick="register()" class="btn btn-danger">
+                註冊
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- footer -->
+    <%- include("./basic/footer.ejs") %>
+  </body>
+</html>
