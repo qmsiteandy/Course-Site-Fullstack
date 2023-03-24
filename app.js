@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
-const { pageRouter } = require("./routes");
+const { pageRouter, userRouter } = require("./routes");
 
 // Set view engine to ejs
 app.set("view engine", "ejs");
@@ -15,6 +15,13 @@ app.use(bodyParser.json());
 
 // Routes
 app.use("/", pageRouter);
+app.use("/api/user", userRouter);
+
+// Error Handler
+app.use((err, req, res, next) => {
+  console.log(err);
+  res.status(500).send(err);
+});
 
 // Run server
 app.listen(3000, () => {
