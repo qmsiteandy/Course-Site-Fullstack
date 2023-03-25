@@ -2,15 +2,16 @@ const express = require("express");
 const router = express.Router();
 const mysql = require("../config/mysqlConnection");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 router.post("/register", async (req, res, next) => {
-  // // 取得傳入資料並檢查有無缺漏
+  // 取得傳入資料並檢查有無缺漏
   const { name, account, password } = req.body;
   if (!name || !account || !password) {
     return res.status(400).send({ error: "缺少部分參數資料" });
   }
 
-  // // 檢查 DB 是否已存在此帳號
+  // 檢查 DB 是否已存在此帳號
   mysql.query(
     "SELECT * FROM user WHERE user_account=?",
     [account],
@@ -40,6 +41,63 @@ router.post("/register", async (req, res, next) => {
             );
           });
         });
+      }
+    }
+  );
+});
+
+router.post("/login", (req, res, next) => {
+  // 取得傳入資料並檢查有無缺漏
+  const { account, password } = req.body;
+  if (!account || !password) {
+    return res.status(400).send({ error: "缺少部分參數資料" });
+  }
+
+  // 在 DB 中找到對應的 account 資料
+  mysql.query(
+    "SELECT * FROM user WHERE user_account=?",
+    [account],
+    (err, result) => {
+      if (result == null && result[0] == null) {
+        return res.status(404).send({ error: "帳號或密碼錯誤" });
+      } else {
+        // 取得 DB 中該帳號的 JSON 資料
+        const userData = JSON.parse(JSON.stringify(result[0]));
+
+        // 比對密碼
+        bcrypt
+          .compare(password, userData.user_password)
+          .then((isMatch) => {
+            if (isMatch == false) {
+              return res.status(404).send({ error: "帳號或密碼錯誤" });
+            }
+            // 登入成功
+            else {
+              // 建立 JWT
+              const tokenObj = {
+                account: userData.user_account,
+                name: userData.user_name,
+              };
+              const token = jwt.sign(tokenObj, process.env.JWT_SECRET, {
+                expiresIn: "1 day",
+              });
+              console.log(token);
+              return res
+                .status(200)
+                .cookie("token", "JWT " + token) // 要求讓前端 cookie 儲存 JWT token
+                .send({
+                  msg: "登入成功",
+                  user: {
+                    name: userData.user_name,
+                    permission: userData.user_permission,
+                  },
+                });
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+            res.status(400).send({ error: err });
+          });
       }
     }
   );
