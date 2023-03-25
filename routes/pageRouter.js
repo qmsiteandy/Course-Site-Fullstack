@@ -20,8 +20,8 @@ router.get("/mycourse", (req, res) => {
   res.render("mycourse.ejs");
 });
 
-router.get("/admin", (req, res) => {
-  res.render("admin.ejs");
+router.get("/backend", (req, res) => {
+  res.render("backend.ejs");
 });
 
 router.get("/shopcart", (req, res) => {
