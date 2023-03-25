@@ -76,7 +76,10 @@
         })
         .then((res) => {
           if (res.status === 200) {
+            localStorage.setItem("user", JSON.stringify(res.data.user));
+            document.cookie = "token=" + res.data.token;
             alert(res.data.msg);
+            window.location.href = "/";
           }
         })
         .catch((err) => {
