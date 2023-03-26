@@ -75,21 +75,21 @@ router.post("/login", (req, res, next) => {
             else {
               // 建立 JWT
               const tokenObj = {
-                account: userData.user_account,
+                userId: userData.userId,
                 name: userData.user_name,
                 permission: userData.user_permission,
               };
               const token = jwt.sign(tokenObj, process.env.JWT_SECRET, {
                 expiresIn: "1 day",
               });
-              console.log(token);
+
               return res.status(200).send({
                 msg: "登入成功",
                 user: {
                   name: userData.user_name,
                   permission: userData.user_permission,
                 },
-                token: "JWT " + token, // 要求讓前端 cookie 儲存 JWT token
+                token: "JWT " + token,
               });
             }
           })

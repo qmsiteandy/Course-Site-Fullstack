@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const passport = require("../config/passport");
 
 router.get("/", (req, res) => {
   res.render("index.ejs");
@@ -24,8 +25,13 @@ router.get("/backend", (req, res) => {
   res.render("backend.ejs");
 });
 
-router.get("/shopcart", (req, res) => {
-  res.render("shopcart.ejs");
-});
+router.get(
+  "/shopcart",
+  passport.authenticate("jwt", { failureRedirect: "/login" }),
+  (req, res) => {
+    console.log(req.user);
+    res.render("shopcart.ejs");
+  }
+);
 
 module.exports = router;
