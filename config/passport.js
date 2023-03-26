@@ -2,7 +2,6 @@ const { use } = require("passport");
 const passport = require("passport");
 const JwtStrategy = require("passport-jwt").Strategy,
   ExtractJwt = require("passport-jwt").ExtractJwt;
-const JwtCookieComboStrategy = require("passport-jwt-cookiecombo").Strategy;
 const mysql = require("./mysqlConnection");
 
 passport.serializeUser(function (user, done) {

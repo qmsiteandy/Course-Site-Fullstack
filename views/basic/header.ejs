@@ -53,6 +53,7 @@
         $("#logout").hide();
         $("#mycourse").hide();
         $("#backend").hide();
+        $("#shopcart").hide();
       } else {
         $("#login").hide();
         console.log(user.permission == 0);
@@ -67,7 +68,11 @@
 
     function Logout() {
       localStorage.removeItem("user");
-      document.cookie.removeItem("token");
+      document.cookie = "";
+
+      axios.post("/api/user/logout", {}).catch((err) => {
+        alert(err.response.data.error);
+      });
     }
   </script>
 </html>

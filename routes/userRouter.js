@@ -3,6 +3,7 @@ const router = express.Router();
 const mysql = require("../config/mysqlConnection");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const { connect } = require("../config/mysqlConnection");
 
 router.post("/register", async (req, res, next) => {
   // 取得傳入資料並檢查有無缺漏
@@ -17,7 +18,7 @@ router.post("/register", async (req, res, next) => {
     [account],
     (err, result) => {
       if (err) {
-        return res.status(400).send({ error: err });
+        next(err);
       }
       if (result.length != 0) {
         return res.status(400).send({ error: "此帳號已存在" });
@@ -25,7 +26,7 @@ router.post("/register", async (req, res, next) => {
         // 進行密碼加密
         bcrypt.genSalt(10, function (err, salt) {
           bcrypt.hash(password, salt, function (err, hash) {
-            if (err) return res.status(400).send({ error: err });
+            if (err) next(err);
 
             // 將輸入資料以及加密後的密碼存入 DB
             mysql.query(
@@ -33,7 +34,7 @@ router.post("/register", async (req, res, next) => {
               [name, account, hash],
               (err, result) => {
                 if (err) {
-                  return res.status(400).send({ error: err });
+                  next(err);
                 } else {
                   return res.status(201).send({ msg: "註冊成功！" });
                 }
@@ -93,12 +94,19 @@ router.post("/login", (req, res, next) => {
             }
           })
           .catch((err) => {
-            console.log(err);
-            res.status(400).send({ error: err });
+            next(err);
           });
       }
     }
   );
+});
+
+router.post("/logout", function (req, res, next) {
+  req.logout(function (err) {
+    if (err) {
+      next(err);
+    }
+  });
 });
 
 module.exports = router;
