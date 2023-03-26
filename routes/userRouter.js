@@ -58,12 +58,11 @@ router.post("/login", (req, res, next) => {
     "SELECT * FROM user WHERE user_account=?",
     [account],
     (err, result) => {
-      if (result == null && result[0] == null) {
+      if (result == null || result[0] == undefined) {
         return res.status(404).send({ error: "帳號或密碼錯誤" });
       } else {
         // 取得 DB 中該帳號的 JSON 資料
         const userData = JSON.parse(JSON.stringify(result[0]));
-
         // 比對密碼
         bcrypt
           .compare(password, userData.user_password)
