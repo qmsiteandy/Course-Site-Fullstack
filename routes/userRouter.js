@@ -101,12 +101,4 @@ router.post("/login", (req, res, next) => {
   );
 });
 
-router.post("/logout", function (req, res, next) {
-  req.logout(function (err) {
-    if (err) {
-      next(err);
-    }
-  });
-});
-
 module.exports = router;
