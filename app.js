@@ -38,7 +38,7 @@ app.use("/api/user", userRouter);
 // Error Handler
 app.use((err, req, res, next) => {
   console.log(err);
-  res.status(500).send({ error: "Something is wrong" });
+  res.status(500).send({ error: "Something is wrong \n " + err });
 });
 
 // Run server

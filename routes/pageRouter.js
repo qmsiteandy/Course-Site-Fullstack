@@ -25,9 +25,13 @@ router.get("/backend", (req, res) => {
   res.render("backend.ejs");
 });
 
-router.get("/shopcart", (req, res) => {
-  console.log(req.user);
-  res.render("shopcart.ejs");
-});
+router.get(
+  "/shopcart",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    console.log(req.user);
+    res.render("shopcart.ejs");
+  }
+);
 
 module.exports = router;

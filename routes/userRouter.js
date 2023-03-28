@@ -80,7 +80,7 @@ router.post("/login", (req, res, next) => {
                 permission: userData.user_permission,
               };
               const token = jwt.sign(tokenObj, process.env.JWT_SECRET, {
-                expiresIn: "1 day",
+                expiresIn: "10 s",
               });
 
               return res.status(200).send({
