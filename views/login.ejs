@@ -43,12 +43,20 @@
               使用社群帳號登入
             </div>
             <div class="text-center">
-              <button type="button" class="btn btn-outline-dark w-5">
+              <a
+                type="button"
+                href="/oauth/google"
+                class="btn btn-outline-dark w-5"
+              >
                 <i class="fa-brands fa-google"></i>
-              </button>
-              <button type="button" class="btn btn-outline-dark w-5">
+              </a>
+              <a
+                type="button"
+                href="/oauth/facebook"
+                class="btn btn-outline-dark w-5"
+              >
                 <i class="fa-brands fa-facebook-f"></i>
-              </button>
+              </a>
             </div>
           </div>
         </form>
@@ -83,7 +91,7 @@
           }
         })
         .catch((err) => {
-          alert(err.response.data.error);
+          alert(err.response.data);
           location.reload();
         });
     }

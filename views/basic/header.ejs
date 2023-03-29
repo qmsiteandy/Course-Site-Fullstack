@@ -28,6 +28,11 @@
               <a class="nav-link" href="/mycourse" id="mycourse">我的課程</a>
             </li>
             <li class="nav-item">
+              <a class="nav-link" href="/teacher_register" id="teacher_register"
+                >新增教師</a
+              >
+            </li>
+            <li class="nav-item">
               <a class="nav-link" href="/backend" id="backend">後臺管理</a>
             </li>
             <li class="nav-item">
@@ -56,16 +61,22 @@
       if (!user) {
         $("#logout").hide();
         $("#mycourse").hide();
+        $("#teacher_register").hide();
         $("#backend").hide();
         $("#shopcart").hide();
       } else {
         $("#login").hide();
-        console.log(user.permission == 0);
         if (user.permission == 0) {
           $("#backend").hide();
-        }
-        if (user.permission == 1) {
+          $("#teacher_register").hide();
+        } else if (user.permission == 1) {
           $("#mycourse").hide();
+          $("#shopcart").hide();
+          $("#teacher_register").hide();
+        } else if (user.permission == 2) {
+          $("#mycourse").hide();
+          $("#backend").hide();
+          $("#shopcart").hide();
         }
       }
     });

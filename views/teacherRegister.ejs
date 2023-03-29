@@ -15,7 +15,7 @@
       <div class="container mb-5">
         <form class="login">
           <div class="border-gray w-30 middle p-4 mt-5">
-            <h2 class="my-3 text-danger text-center">學員註冊</h2>
+            <h2 class="my-3 text-danger text-center">添加教師帳號</h2>
             <div class="middle mt-4 text-center">
               <label for="name">姓名 ： </label>
               <input class="name" name="name" placeholder="請輸入姓名" />
@@ -69,13 +69,18 @@
           account: $(".account").val(),
           password: $(".password").val(),
         };
+        let config = {
+          headers: { Authorization: localStorage.getItem("token") },
+        };
+        console.log(config.Headers);
         axios
-          .post("/api/user/register", data)
+          .post("/api/admin/teacherRegister", data, config)
           .then((res) => {
+            console.log("res", res);
             // 註冊成功
             if (res.status == 201) {
               alert(res.data);
-              window.location.href = "/login";
+              window.location.href = "/";
             }
           })
           .catch((error) => {

@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
-const { pageRouter, userRouter } = require("./routes");
+const routes = require("./routes");
 const session = require("express-session");
 const passport = require("./config/passport");
 
@@ -32,13 +32,15 @@ app.use(bodyParser.json());
 // app.use(passport.session());
 
 // Routes
-app.use("/", pageRouter);
-app.use("/api/user", userRouter);
+app.use("/", routes.pageRouter);
+app.use("/api/user", routes.userRouter);
+app.use("/api/admin", routes.adminRouter);
+app.use("/oauth", routes.oauthRouter);
 
 // Error Handler
 app.use((err, req, res, next) => {
   console.log(err);
-  res.status(500).send({ error: "Something is wrong \n " + err });
+  res.status(500).send({ error: "Something is wrong. Error: " + err });
 });
 
 // Run server

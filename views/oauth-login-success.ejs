@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Course Site</title>
+  </head>
+
+  <body></body>
+
+  <script>
+    const params = new Proxy(new URLSearchParams(window.location.search), {
+      get: (searchParams, prop) => searchParams.get(prop),
+    });
+
+    const token = params.token;
+    const name = params.name;
+    const permission = params.permission;
+
+    localStorage.setItem("user", JSON.stringify({ name, permission }));
+    localStorage.setItem("token", token);
+
+    alert("登入成功");
+
+    window.location.href = "/";
+  </script>
+</html>
