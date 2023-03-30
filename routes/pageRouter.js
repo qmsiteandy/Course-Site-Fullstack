@@ -25,8 +25,11 @@ router.get("/backend", (req, res) => {
   res.render("backend.ejs");
 });
 
+router.get("/teacher_register", (req, res) => {
+  res.render("teacherRegister.ejs");
+});
+
 router.get("/shopcart", (req, res) => {
-  console.log(req.user);
   res.render("shopcart.ejs");
 });
 

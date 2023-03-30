@@ -28,6 +28,11 @@
               <a class="nav-link" href="/mycourse" id="mycourse">我的課程</a>
             </li>
             <li class="nav-item">
+              <a class="nav-link" href="/teacher_register" id="teacher_register"
+                >新增教師</a
+              >
+            </li>
+            <li class="nav-item">
               <a class="nav-link" href="/backend" id="backend">後臺管理</a>
             </li>
             <li class="nav-item">
@@ -36,9 +41,13 @@
               >
             </li>
           </ul>
-          <a class="btn verticle-center ml-4 mr-3" href="/shopcart">
+          <a
+            class="btn verticle-center ml-4 mr-3"
+            id="shopcart"
+            href="/shopcart"
+          >
             <i class="fas fa-shopping-cart"></i>
-            <span id="shopcart">購物車(0)</span>
+            <span>購物車(0)</span>
           </a>
         </div>
       </div>
@@ -52,37 +61,43 @@
       if (!user) {
         $("#logout").hide();
         $("#mycourse").hide();
+        $("#teacher_register").hide();
         $("#backend").hide();
         $("#shopcart").hide();
       } else {
         $("#login").hide();
-        console.log(user.permission == 0);
         if (user.permission == 0) {
           $("#backend").hide();
-        }
-        if (user.permission == 1) {
+          $("#teacher_register").hide();
+        } else if (user.permission == 1) {
           $("#mycourse").hide();
+          $("#shopcart").hide();
+          $("#teacher_register").hide();
+        } else if (user.permission == 2) {
+          $("#mycourse").hide();
+          $("#backend").hide();
+          $("#shopcart").hide();
         }
       }
     });
 
     function Logout() {
       localStorage.removeItem("user");
-      deleteAllCookies();
+      localStorage.removeItem("token");
 
-      axios.post("/api/user/logout", {}).catch((err) => {
-        alert(err.response.data.error);
-      });
+      // axios.post("/api/user/logout", {}).catch((err) => {
+      //   alert(err.response.data.error);
+      // });
     }
 
-    function deleteAllCookies() {
-      var cookies = document.cookie.split(";");
-      for (var i = 0; i < cookies.length; i++) {
-        var cookie = cookies[i];
-        var eqPos = cookie.indexOf("=");
-        var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
-        document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
-      }
-    }
+    // function deleteAllCookies() {
+    //   var cookies = document.cookie.split(";");
+    //   for (var i = 0; i < cookies.length; i++) {
+    //     var cookie = cookies[i];
+    //     var eqPos = cookie.indexOf("=");
+    //     var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+    //     document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    //   }
+    // }
   </script>
 </html>

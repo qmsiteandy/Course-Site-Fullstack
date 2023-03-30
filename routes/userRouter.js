@@ -9,7 +9,7 @@ router.post("/register", async (req, res, next) => {
   // 取得傳入資料並檢查有無缺漏
   const { name, account, password } = req.body;
   if (!name || !account || !password) {
-    return res.status(400).send({ error: "缺少部分參數資料" });
+    return res.status(400).send("缺少部分參數資料");
   }
 
   // 檢查 DB 是否已存在此帳號
@@ -21,7 +21,7 @@ router.post("/register", async (req, res, next) => {
         next(err);
       }
       if (result.length != 0) {
-        return res.status(400).send({ error: "此帳號已存在" });
+        return res.status(400).send("此帳號已存在");
       } else {
         // 進行密碼加密
         bcrypt.genSalt(10, function (err, salt) {
@@ -36,7 +36,7 @@ router.post("/register", async (req, res, next) => {
                 if (err) {
                   next(err);
                 } else {
-                  return res.status(201).send({ msg: "註冊成功！" });
+                  return res.status(201).send("註冊成功！");
                 }
               }
             );
@@ -60,7 +60,7 @@ router.post("/login", (req, res, next) => {
     [account],
     (err, result) => {
       if (result == null || result[0] == undefined) {
-        return res.status(404).send({ error: "帳號或密碼錯誤" });
+        return res.status(404).send("帳號或密碼錯誤，請重新輸入！");
       } else {
         // 取得 DB 中該帳號的 JSON 資料
         const userData = JSON.parse(JSON.stringify(result[0]));
@@ -69,7 +69,7 @@ router.post("/login", (req, res, next) => {
           .compare(password, userData.user_password)
           .then((isMatch) => {
             if (isMatch == false) {
-              return res.status(404).send({ error: "帳號或密碼錯誤" });
+              return res.status(404).send("帳號或密碼錯誤");
             }
             // 登入成功
             else {
@@ -80,7 +80,7 @@ router.post("/login", (req, res, next) => {
                 permission: userData.user_permission,
               };
               const token = jwt.sign(tokenObj, process.env.JWT_SECRET, {
-                expiresIn: "1 day",
+                expiresIn: "12 h",
               });
 
               return res.status(200).send({
@@ -99,14 +99,6 @@ router.post("/login", (req, res, next) => {
       }
     }
   );
-});
-
-router.post("/logout", function (req, res, next) {
-  req.logout(function (err) {
-    if (err) {
-      next(err);
-    }
-  });
 });
 
 module.exports = router;
