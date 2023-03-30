@@ -5,22 +5,6 @@ const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const FacebookStrategy = require("passport-facebook").Strategy;
 const mysql = require("./mysqlConnection");
 
-// passport.serializeUser(function (user, done) {
-//   console.log("serializeUser user = ", user);
-//   done(null, user.userId);
-// });
-
-// passport.deserializeUser(function (userId, done) {
-//   console.log("deserializeUser userId = ", userId);
-//   mysql.query("SELECT * FROM user WHERE userId=?", [userId], (err, results) => {
-//     if (err) return done(err, false);
-//     if (results[0] == null) return done(null, false);
-//     else {
-//       return done(null, results[0]);
-//     }
-//   });
-// });
-
 const opts = {};
 opts.jwtFromRequest = ExtractJwt.fromAuthHeaderWithScheme("jwt");
 opts.secretOrKey = process.env.JWT_SECRET;
@@ -29,19 +13,6 @@ passport.use(
   new JwtStrategy(opts, (jwt_payload, done) => {
     if (jwt_payload == null) return done(null, false);
     else return done(null, jwt_payload);
-
-    console.log("jwt_payload", jwt_payload);
-    // mysql.query(
-    //   "SELECT * FROM user WHERE userId=?",
-    //   [jwt_payload.userId],
-    //   (err, results) => {
-    //     if (err) return done(err, false);
-    //     if (results[0] == null) return done(null, false);
-    //     else {
-    //       return done(null, results[0]);
-    //     }
-    //   }
-    // );
   })
 );
 
