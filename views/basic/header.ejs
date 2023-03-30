@@ -64,18 +64,29 @@
         $("#teacher_register").hide();
         $("#backend").hide();
         $("#shopcart").hide();
-      } else {
+      }
+      // 登入狀態
+      else {
         $("#login").hide();
+        // 學生帳號
         if (user.permission == 0) {
-          $("#backend").hide();
+          $("#mycourse").show();
           $("#teacher_register").hide();
-        } else if (user.permission == 1) {
+          $("#backend").hide();
+          $("#shopcart").show();
+        }
+        // 教師帳號
+        else if (user.permission == 1) {
           $("#mycourse").hide();
+          $("#teacher_register").hide();
+          $("#backend").show();
           $("#shopcart").hide();
-          $("#teacher_register").hide();
-        } else if (user.permission == 2) {
+        }
+        // 管理者帳號
+        else if (user.permission == 2) {
           $("#mycourse").hide();
-          $("#backend").hide();
+          $("#teacher_register").show();
+          $("#backend").show();
           $("#shopcart").hide();
         }
       }

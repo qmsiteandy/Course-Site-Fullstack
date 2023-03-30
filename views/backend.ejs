@@ -32,17 +32,15 @@
         >
           <thead>
             <tr>
-              <th>商品名稱</th>
-              <th>定價</th>
-              <th>庫存</th>
-              <th>商品敘述</th>
-              <th>商品圖片</th>
-              <th>商品狀態</th>
+              <th>課程名稱</th>
+              <th>教師</th>
+              <th>介紹</th>
+              <th>價格</th>
               <th>修改商品</th>
               <th>刪除商品</th>
             </tr>
           </thead>
-          <tbody class="products-content"></tbody>
+          <tbody class="course-content"></tbody>
         </table>
       </div>
 
@@ -278,4 +276,76 @@
     <!-- footer -->
     <%- include("./basic/footer.ejs") %>
   </body>
+  <script>
+    $(document).ready(function init() {
+      const user = JSON.parse(localStorage.getItem("user"));
+      let apiUrl = "";
+      if (user.permission == 1) apiUrl = `/api/course/teacher/${user.userID}`;
+      else if (user.permission == 2) apiUrl = `/api/course/`;
+
+      axios
+        .get(apiUrl)
+        .then((res) => {
+          console.log(res);
+          let html = "";
+          if (res.status == 200 && res.data != null) {
+            res.data.forEach((course) => {
+              html += `<tr>
+                  <th>${course.course_name}</th>
+                  <th>${course.course_teacherID}</th>
+                  <th>${course.course_desc}</th>
+                  <th>${course.couse_price}</th>
+                  <th>
+                    <button
+                      id="showMod-${course.courseID}"
+                      class="btn btn-primary"
+                      data-toggle="modal"
+                      data-target="#modifyModal"
+                    >
+                      修改
+                    </button>
+                  </th>
+                  <th>
+                    <button id="delete-${course.courseID}" class="btn btn-danger">刪除</button>
+                  </th>
+                </tr>`;
+            });
+            $(".course-content").html(html);
+          } else {
+            alert("尚無課程資料");
+          }
+        })
+        .catch((err) => {
+          alert(err);
+        });
+    });
+
+    // 顯示新增商品 modal
+    function showAddModal() {
+      $("#addModal").modal("show");
+    }
+
+    // 關閉新增商品 modal
+    function closeAddModal() {
+      $("#addModal").modal("hide");
+    }
+
+    // 顯示修改商品 modal, 並帶入當前商品資訊
+    function showModifyModal(product) {
+      product = JSON.parse(product);
+      $("#mod-name").val(product.name);
+      $("#mod-desc").val(product.description);
+      $("#mod-amount").val(product.amount);
+      $("#mod-inventory").val(product.inventory);
+      $("#mod-status").val(product.status);
+      $("#modifyModal").modal("show");
+
+      selectedId = product.id;
+    }
+
+    // 關閉修改商品 modal
+    function closeModifyModal() {
+      $("#modifyModal").modal("hide");
+    }
+  </script>
 </html>
