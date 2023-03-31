@@ -14,11 +14,11 @@
       get: (searchParams, prop) => searchParams.get(prop),
     });
 
-    const token = params.token;
-    const name = params.name;
-    const permission = params.permission;
+    const { token, user } = params;
 
-    localStorage.setItem("user", JSON.stringify({ name, permission }));
+    console.log(user);
+
+    localStorage.setItem("user", user);
     localStorage.setItem("token", token);
 
     alert("登入成功");

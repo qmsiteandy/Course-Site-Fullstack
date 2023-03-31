@@ -86,6 +86,7 @@ router.post("/login", (req, res, next) => {
               return res.status(200).send({
                 msg: "登入成功",
                 user: {
+                  userId: userData.userId,
                   name: userData.user_name,
                   permission: userData.user_permission,
                 },
