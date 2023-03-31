@@ -30,7 +30,11 @@ passport.use(
         (err, results) => {
           // 使用者已存在
           if (results && results[0]) {
-            return cb(err, JSON.parse(JSON.stringify(results[0])));
+            return cb(err, {
+              userID: results[0].insertId,
+              user_name: results[0].user_name,
+              user_permission: results[0].user_permission,
+            });
           }
           // // 使用者不存在，建立新資料
           else {
@@ -71,7 +75,11 @@ passport.use(
         (err, results) => {
           // 使用者已存在
           if (results && results[0]) {
-            return cb(err, JSON.parse(JSON.stringify(results[0])));
+            return cb(err, {
+              userID: results[0].insertId,
+              user_name: results[0].user_name,
+              user_permission: results[0].user_permission,
+            });
           }
           // // 使用者不存在，建立新資料
           else {

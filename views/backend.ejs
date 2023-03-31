@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Course Site</title>
+  </head>
+
+  <body>
+    <!-- header -->
+    <%- include("./basic/header.ejs") %>
+
+    <div class="content">
+      <div class="container mb-5">
+        <h2 class="mt-3 mb-5">後台管理</h2>
+
+        <div class="d-flex justify-content-end">
+          <button
+            class="btn btn-success mb-3"
+            onclick="showAddModal()"
+            data-toggle="modal"
+            data-target="#addModal"
+          >
+            新增商品
+          </button>
+        </div>
+        <!-- 使用 datatalbe 顯示商品資訊 -->
+        <table
+          id="products"
+          class="border-gray table table-striped table-bordered my-5"
+        >
+          <thead>
+            <tr>
+              <th>課程名稱</th>
+              <th>教師</th>
+              <th>介紹</th>
+              <th>價格</th>
+              <th>修改商品</th>
+              <th>刪除商品</th>
+            </tr>
+          </thead>
+          <tbody class="course-content"></tbody>
+        </table>
+
+        <div class="modal fade" id="myModal" role="dialog">
+          <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                  &times;
+                </button>
+                <h4 class="modal-title">Modal Header</h4>
+              </div>
+              <div class="modal-body">
+                <p>Some text in the modal.</p>
+              </div>
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-default"
+                  data-dismiss="modal"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <%# 新增商品 modal %>
+        <div
+          id="addModal"
+          class="modal fade"
+          tabindex="-1"
+          role="dialog"
+          aria-labelledby="addModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="addModalLabel">新增課程</h5>
+                <button
+                  type="button"
+                  class="close"
+                  data-dismiss="modal"
+                  aria-label="Close"
+                  onclick="closeAddModal()"
+                >
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form id="add-form">
+                  <div class="form-group">
+                    <label for="add-name" class="col-form-label mr-3"
+                      >課程名稱:</label
+                    >
+                    <input
+                      id="add-name"
+                      type="text"
+                      class="add-name"
+                      name="name"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="add-desc" class="col-form-label mr-3"
+                      >課程敘述:</label
+                    >
+                    <textarea
+                      id="add-desc"
+                      type="text"
+                      class="add-desc"
+                      name="desc"
+                    ></textarea>
+                  </div>
+                  <div class="form-group">
+                    <label for="add-price" class="col-form-label mr-3"
+                      >課程價格:</label
+                    >
+                    <input
+                      id="add-price"
+                      type="number"
+                      class="add-price"
+                      name="price"
+                    />
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  onclick="addSubmit()"
+                >
+                  確定新增
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-dismiss="modal"
+                  onclick="closeAddModal()"
+                >
+                  取消
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <%# 修改商品 modal %>
+        <div
+          id="modifyModal"
+          class="modal fade"
+          tabindex="-1"
+          role="dialog"
+          aria-labelledby="modModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="modModalLabel">修改商品</h5>
+                <button
+                  type="button"
+                  class="close"
+                  data-dismiss="modal"
+                  aria-label="Close"
+                  onclick="closeModifyModal()"
+                >
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form id="mod-form">
+                  <div class="form-group">
+                    <label for="mod-name" class="col-form-label mr-3"
+                      >商品名稱:</label
+                    >
+                    <input
+                      id="mod-name"
+                      type="text"
+                      class="mod-name"
+                      name="name"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="mod-desc" class="col-form-label mr-3"
+                      >商品敘述:</label
+                    >
+                    <input
+                      id="mod-desc"
+                      type="text"
+                      class="mod-desc"
+                      name="desc"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="mod-amount" class="col-form-label mr-3"
+                      >商品價格:</label
+                    >
+                    <input
+                      id="mod-amount"
+                      type="text"
+                      class="mod-amount"
+                      name="amount"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="mod-inventory" class="col-form-label mr-3"
+                      >庫存數量:</label
+                    >
+                    <input
+                      id="mod-inventory"
+                      type="text"
+                      class="mod-inventory"
+                      name="inventory"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="mod-status" class="col-form-label mr-3"
+                      >商品狀態:</label
+                    >
+                    <select id="mod-status" name="status">
+                      <option value="A">上架中</option>
+                      <option value="S">已下架</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="mod-img" class="col-form-label mr-3"
+                      >圖片上傳:</label
+                    >
+                    <!-- 需在每次上傳圖片的時候更新檔案 -->
+                    <input
+                      id="mod-img"
+                      type="file"
+                      class="mod-img"
+                      name="img"
+                      onchange="upload(event)"
+                    />
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  onclick="modSubmit()"
+                >
+                  確定修改
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-dismiss="modal"
+                  onclick="closeModifyModal()"
+                >
+                  取消
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- footer -->
+    <%- include("./basic/footer.ejs") %>
+  </body>
+  <script>
+    $(document).ready(function init() {
+      const user = JSON.parse(localStorage.getItem("user"));
+      let apiUrl = "";
+      if (user.permission == 1) apiUrl = `/api/course/teacher/${user.userID}`;
+      else if (user.permission == 2) apiUrl = `/api/course/`;
+
+      axios
+        .get(apiUrl)
+        .then((res) => {
+          let html = "";
+          if (res.status == 200 && res.data != null) {
+            res.data.forEach((course) => {
+              html += `<tr>
+                  <th>${course.course_name}</th>
+                  <th>${course.course_teacherID}</th>
+                  <th>${course.course_desc}</th>
+                  <th>${course.course_price}</th>
+                  <th>
+                    <button
+                      id="showMod-${course.courseID}"
+                      class="btn btn-primary"
+                      data-toggle="modal"
+                      data-target="#modifyModal"
+                    >
+                      修改
+                    </button>
+                  </th>
+                  <th>
+                    <button id="delete-${course.courseID}" class="btn btn-danger">刪除</button>
+                  </th>
+                </tr>`;
+            });
+            $(".course-content").html(html);
+
+            // 綁定刪除與修改商品的點擊事件, 並在點擊時傳入當前商品的資訊
+            for (let i = 0; i < res.data.length; i++) {
+              $(`#showMod-${res.data[i].courseId}`).on("click", () => {
+                console.log(`#showMod-${res.data[i].courseId}`);
+                showModifyModal(JSON.stringify(res.data[i]));
+              });
+              $(`#delete-${res.data[i].courseId}`).on("click", () => {
+                deleteProduct(JSON.stringify(res.data[i]));
+              });
+            }
+          } else {
+            alert("尚無課程資料");
+          }
+        })
+        .catch((err) => {
+          alert(err);
+        });
+    });
+
+    // 顯示新增商品 modal
+    function showAddModal() {
+      $("#addModal").modal("show");
+    }
+
+    // 關閉新增商品 modal
+    function closeAddModal() {
+      $("#addModal").modal("hide");
+    }
+
+    // 呼叫新增 API
+    function addSubmit() {
+      let data = {
+        name: $("#add-name").val(),
+        desc: $("#add-desc").val(),
+        price: $("#add-price").val(),
+      };
+      axios
+        .post("/api/course", data, {
+          headers: { Authorization: localStorage.getItem("token") },
+        })
+        .then((res) => {
+          if (res.status === 201) {
+            alert("新增成功！");
+            this.closeAddModal();
+            location.reload();
+          } else {
+            alert("新增失敗，請洽管理員。");
+          }
+        })
+        .catch((error) => {
+          alert("系統發生錯誤，請洽管理員。");
+          location.reload();
+        });
+    }
+
+    // 顯示修改商品 modal, 並帶入當前商品資訊
+    function showModifyModal(product) {
+      console.log(product);
+      product = JSON.parse(product);
+      $("#mod-name").val(product.name);
+      $("#mod-desc").val(product.description);
+      $("#mod-amount").val(product.amount);
+      $("#mod-inventory").val(product.inventory);
+      $("#mod-status").val(product.status);
+      $("#modifyModal").modal("show");
+
+      selectedId = product.id;
+    }
+
+    // 關閉修改商品 modal
+    function closeModifyModal() {
+      $("#modifyModal").modal("hide");
+    }
+  </script>
+</html>

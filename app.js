@@ -18,23 +18,11 @@ app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-// // Initial session
-// app.use(
-//   session({
-//     secret: process.env.SESSION_KEY,
-//     saveUninitialized: true,
-//     resave: false,
-//   })
-// );
-
-// // Initial passport and passport-session
-// app.use(passport.initialize());
-// app.use(passport.session());
-
 // Routes
 app.use("/", routes.pageRouter);
 app.use("/api/user", routes.userRouter);
 app.use("/api/admin", routes.adminRouter);
+app.use("/api/course", routes.courseRouter);
 app.use("/oauth", routes.oauthRouter);
 
 // Error Handler
