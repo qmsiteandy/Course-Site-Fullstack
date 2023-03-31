@@ -42,231 +42,224 @@
           </thead>
           <tbody class="course-content"></tbody>
         </table>
-      </div>
 
-      <%# 新增商品 modal %>
-      <div
-        id="addModal"
-        class="modal fade"
-        tabindex="-1"
-        role="dialog"
-        aria-labelledby="addModalLabel"
-        aria-hidden="true"
-      >
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="addModalLabel">新增商品</h5>
-              <button
-                type="button"
-                class="close"
-                data-dismiss="modal"
-                aria-label="Close"
-                onclick="closeAddModal()"
-              >
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <form id="add-form">
-                <div class="form-group">
-                  <label for="add-name" class="col-form-label mr-3"
-                    >商品名稱:</label
-                  >
-                  <input
-                    id="add-name"
-                    type="text"
-                    class="add-name"
-                    name="name"
-                  />
-                </div>
-                <div class="form-group">
-                  <label for="add-desc" class="col-form-label mr-3"
-                    >商品敘述:</label
-                  >
-                  <input
-                    id="add-desc"
-                    type="text"
-                    class="add-desc"
-                    name="desc"
-                  />
-                </div>
-                <div class="form-group">
-                  <label for="add-amount" class="col-form-label mr-3"
-                    >商品價格:</label
-                  >
-                  <input
-                    id="add-amount"
-                    type="text"
-                    class="add-amount"
-                    name="amount"
-                  />
-                </div>
-                <div class="form-group">
-                  <label for="add-inventory" class="col-form-label mr-3"
-                    >庫存數量:</label
-                  >
-                  <input
-                    id="add-inventory"
-                    type="text"
-                    class="add-inventory"
-                    name="inventory"
-                  />
-                </div>
-                <div class="form-group">
-                  <label for="add-status" class="col-form-label mr-3"
-                    >商品狀態:</label
-                  >
-                  <select id="add-status" name="status">
-                    <option value="A">上架中</option>
-                    <option value="S">已下架</option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <label for="add-img" class="col-form-label mr-3"
-                    >圖片上傳:</label
-                  >
-                  <!-- 需在每次上傳圖片的時候更新檔案 -->
-                  <input
-                    id="add-img"
-                    type="file"
-                    class="add-img"
-                    name="img"
-                    onchange="upload(event)"
-                  />
-                </div>
-              </form>
-            </div>
-            <div class="modal-footer">
-              <button
-                type="button"
-                class="btn btn-primary"
-                onclick="addSubmit()"
-              >
-                確定新增
-              </button>
-              <button
-                type="button"
-                class="btn btn-secondary"
-                data-dismiss="modal"
-                onclick="closeAddModal()"
-              >
-                取消
-              </button>
+        <div class="modal fade" id="myModal" role="dialog">
+          <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                  &times;
+                </button>
+                <h4 class="modal-title">Modal Header</h4>
+              </div>
+              <div class="modal-body">
+                <p>Some text in the modal.</p>
+              </div>
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-default"
+                  data-dismiss="modal"
+                >
+                  Close
+                </button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <%# 修改商品 modal %>
-      <div
-        id="modifyModal"
-        class="modal fade"
-        tabindex="-1"
-        role="dialog"
-        aria-labelledby="modModalLabel"
-        aria-hidden="true"
-      >
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="modModalLabel">修改商品</h5>
-              <button
-                type="button"
-                class="close"
-                data-dismiss="modal"
-                aria-label="Close"
-                onclick="closeModifyModal()"
-              >
-                <span aria-hidden="true">&times;</span>
-              </button>
+        <%# 新增商品 modal %>
+        <div
+          id="addModal"
+          class="modal fade"
+          tabindex="-1"
+          role="dialog"
+          aria-labelledby="addModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="addModalLabel">新增課程</h5>
+                <button
+                  type="button"
+                  class="close"
+                  data-dismiss="modal"
+                  aria-label="Close"
+                  onclick="closeAddModal()"
+                >
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form id="add-form">
+                  <div class="form-group">
+                    <label for="add-name" class="col-form-label mr-3"
+                      >課程名稱:</label
+                    >
+                    <input
+                      id="add-name"
+                      type="text"
+                      class="add-name"
+                      name="name"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="add-desc" class="col-form-label mr-3"
+                      >課程敘述:</label
+                    >
+                    <textarea
+                      id="add-desc"
+                      type="text"
+                      class="add-desc"
+                      name="desc"
+                    ></textarea>
+                  </div>
+                  <div class="form-group">
+                    <label for="add-price" class="col-form-label mr-3"
+                      >課程價格:</label
+                    >
+                    <input
+                      id="add-price"
+                      type="number"
+                      class="add-price"
+                      name="price"
+                    />
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  onclick="addSubmit()"
+                >
+                  確定新增
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-dismiss="modal"
+                  onclick="closeAddModal()"
+                >
+                  取消
+                </button>
+              </div>
             </div>
-            <div class="modal-body">
-              <form id="mod-form">
-                <div class="form-group">
-                  <label for="mod-name" class="col-form-label mr-3"
-                    >商品名稱:</label
-                  >
-                  <input
-                    id="mod-name"
-                    type="text"
-                    class="mod-name"
-                    name="name"
-                  />
-                </div>
-                <div class="form-group">
-                  <label for="mod-desc" class="col-form-label mr-3"
-                    >商品敘述:</label
-                  >
-                  <input
-                    id="mod-desc"
-                    type="text"
-                    class="mod-desc"
-                    name="desc"
-                  />
-                </div>
-                <div class="form-group">
-                  <label for="mod-amount" class="col-form-label mr-3"
-                    >商品價格:</label
-                  >
-                  <input
-                    id="mod-amount"
-                    type="text"
-                    class="mod-amount"
-                    name="amount"
-                  />
-                </div>
-                <div class="form-group">
-                  <label for="mod-inventory" class="col-form-label mr-3"
-                    >庫存數量:</label
-                  >
-                  <input
-                    id="mod-inventory"
-                    type="text"
-                    class="mod-inventory"
-                    name="inventory"
-                  />
-                </div>
-                <div class="form-group">
-                  <label for="mod-status" class="col-form-label mr-3"
-                    >商品狀態:</label
-                  >
-                  <select id="mod-status" name="status">
-                    <option value="A">上架中</option>
-                    <option value="S">已下架</option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <label for="mod-img" class="col-form-label mr-3"
-                    >圖片上傳:</label
-                  >
-                  <!-- 需在每次上傳圖片的時候更新檔案 -->
-                  <input
-                    id="mod-img"
-                    type="file"
-                    class="mod-img"
-                    name="img"
-                    onchange="upload(event)"
-                  />
-                </div>
-              </form>
-            </div>
-            <div class="modal-footer">
-              <button
-                type="button"
-                class="btn btn-primary"
-                onclick="modSubmit()"
-              >
-                確定修改
-              </button>
-              <button
-                type="button"
-                class="btn btn-secondary"
-                data-dismiss="modal"
-                onclick="closeModifyModal()"
-              >
-                取消
-              </button>
+          </div>
+        </div>
+
+        <%# 修改商品 modal %>
+        <div
+          id="modifyModal"
+          class="modal fade"
+          tabindex="-1"
+          role="dialog"
+          aria-labelledby="modModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="modModalLabel">修改商品</h5>
+                <button
+                  type="button"
+                  class="close"
+                  data-dismiss="modal"
+                  aria-label="Close"
+                  onclick="closeModifyModal()"
+                >
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form id="mod-form">
+                  <div class="form-group">
+                    <label for="mod-name" class="col-form-label mr-3"
+                      >商品名稱:</label
+                    >
+                    <input
+                      id="mod-name"
+                      type="text"
+                      class="mod-name"
+                      name="name"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="mod-desc" class="col-form-label mr-3"
+                      >商品敘述:</label
+                    >
+                    <input
+                      id="mod-desc"
+                      type="text"
+                      class="mod-desc"
+                      name="desc"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="mod-amount" class="col-form-label mr-3"
+                      >商品價格:</label
+                    >
+                    <input
+                      id="mod-amount"
+                      type="text"
+                      class="mod-amount"
+                      name="amount"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="mod-inventory" class="col-form-label mr-3"
+                      >庫存數量:</label
+                    >
+                    <input
+                      id="mod-inventory"
+                      type="text"
+                      class="mod-inventory"
+                      name="inventory"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="mod-status" class="col-form-label mr-3"
+                      >商品狀態:</label
+                    >
+                    <select id="mod-status" name="status">
+                      <option value="A">上架中</option>
+                      <option value="S">已下架</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="mod-img" class="col-form-label mr-3"
+                      >圖片上傳:</label
+                    >
+                    <!-- 需在每次上傳圖片的時候更新檔案 -->
+                    <input
+                      id="mod-img"
+                      type="file"
+                      class="mod-img"
+                      name="img"
+                      onchange="upload(event)"
+                    />
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  onclick="modSubmit()"
+                >
+                  確定修改
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-dismiss="modal"
+                  onclick="closeModifyModal()"
+                >
+                  取消
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -286,7 +279,6 @@
       axios
         .get(apiUrl)
         .then((res) => {
-          console.log(res);
           let html = "";
           if (res.status == 200 && res.data != null) {
             res.data.forEach((course) => {
@@ -294,7 +286,7 @@
                   <th>${course.course_name}</th>
                   <th>${course.course_teacherID}</th>
                   <th>${course.course_desc}</th>
-                  <th>${course.couse_price}</th>
+                  <th>${course.course_price}</th>
                   <th>
                     <button
                       id="showMod-${course.courseID}"
@@ -311,6 +303,17 @@
                 </tr>`;
             });
             $(".course-content").html(html);
+
+            // 綁定刪除與修改商品的點擊事件, 並在點擊時傳入當前商品的資訊
+            for (let i = 0; i < res.data.length; i++) {
+              $(`#showMod-${res.data[i].courseId}`).on("click", () => {
+                console.log(`#showMod-${res.data[i].courseId}`);
+                showModifyModal(JSON.stringify(res.data[i]));
+              });
+              $(`#delete-${res.data[i].courseId}`).on("click", () => {
+                deleteProduct(JSON.stringify(res.data[i]));
+              });
+            }
           } else {
             alert("尚無課程資料");
           }
@@ -330,8 +333,35 @@
       $("#addModal").modal("hide");
     }
 
+    // 呼叫新增 API
+    function addSubmit() {
+      let data = {
+        name: $("#add-name").val(),
+        desc: $("#add-desc").val(),
+        price: $("#add-price").val(),
+      };
+      axios
+        .post("/api/course", data, {
+          headers: { Authorization: localStorage.getItem("token") },
+        })
+        .then((res) => {
+          if (res.status === 201) {
+            alert("新增成功！");
+            this.closeAddModal();
+            location.reload();
+          } else {
+            alert("新增失敗，請洽管理員。");
+          }
+        })
+        .catch((error) => {
+          alert("系統發生錯誤，請洽管理員。");
+          location.reload();
+        });
+    }
+
     // 顯示修改商品 modal, 並帶入當前商品資訊
     function showModifyModal(product) {
+      console.log(product);
       product = JSON.parse(product);
       $("#mod-name").val(product.name);
       $("#mod-desc").val(product.description);
