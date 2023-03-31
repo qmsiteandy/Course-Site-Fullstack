@@ -24,8 +24,6 @@ router.get(
       expiresIn: "12 h",
     });
 
-    console.log(JSON.stringify(req.user));
-
     return res.redirect(
       `/oauth/login-success/?user=${JSON.stringify(req.user)}&token=${
         "JWT " + token
