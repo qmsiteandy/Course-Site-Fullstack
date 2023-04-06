@@ -106,14 +106,14 @@
                     />
                   </div>
                   <div class="form-group">
-                    <label for="add-desc" class="col-form-label mr-3"
+                    <label for="add-description" class="col-form-label mr-3"
                       >課程敘述:</label
                     >
                     <textarea
-                      id="add-desc"
+                      id="add-description"
                       type="text"
-                      class="add-desc"
-                      name="desc"
+                      class="add-description"
+                      name="description"
                     ></textarea>
                   </div>
                   <div class="form-group">
@@ -199,14 +199,14 @@
                     />
                   </div>
                   <div class="form-group">
-                    <label for="mod-desc" class="col-form-label mr-3"
+                    <label for="mod-description" class="col-form-label mr-3"
                       >課程敘述:</label
                     >
                     <input
-                      id="mod-desc"
+                      id="mod-description"
                       type="text"
-                      class="mod-desc"
-                      name="desc"
+                      class="mod-description"
+                      name="description"
                     />
                   </div>
                   <div class="form-group">
@@ -325,7 +325,7 @@
     $(document).ready(function init() {
       const user = JSON.parse(localStorage.getItem("user"));
       let apiUrl = "";
-      if (user.permission == 1) apiUrl = `/api/course/teacher/${user.userId}`;
+      if (user.permission == 1) apiUrl = `/api/course/teacher/${user.id}`;
       else if (user.permission == 2) apiUrl = `/api/course/`;
 
       axios
@@ -335,13 +335,13 @@
           if (res.status == 200 && res.data != null) {
             res.data.forEach((course) => {
               html += `<tr>
-                  <th>${course.course_name}</th>
-                  <th>${course.course_teacherID}</th>
-                  <th>${course.course_desc}</th>
-                  <th>${course.course_price}</th>
+                  <th>${course.name}</th>
+                  <th>${course.teacherId}</th>
+                  <th>${course.description}</th>
+                  <th>${course.price}</th>
                   <th>
                     <button
-                      id="showMod-${course.courseID}"
+                      id="showMod-${course.id}"
                       class="btn btn-primary"
                       data-toggle="modal"
                       data-target="#modifyModal"
@@ -350,7 +350,7 @@
                     </button>
                   </th>
                   <th>
-                    <button id="delete-${course.courseID}" class="btn btn-danger">刪除</button>
+                    <button id="delete-${course.id}" class="btn btn-danger">刪除</button>
                   </th>
                 </tr>`;
             });
@@ -358,10 +358,10 @@
 
             // 綁定刪除與修改商品的點擊事件, 並在點擊時傳入當前商品的資訊
             for (let i = 0; i < res.data.length; i++) {
-              $(`#showMod-${res.data[i].courseID}`).on("click", () => {
+              $(`#showMod-${res.data[i].id}`).on("click", () => {
                 showModifyModal(JSON.stringify(res.data[i]));
               });
-              $(`#delete-${res.data[i].courseID}`).on("click", () => {
+              $(`#delete-${res.data[i].id}`).on("click", () => {
                 openDeleteModal(JSON.stringify(res.data[i]));
               });
             }
@@ -388,7 +388,7 @@
     function addSubmit() {
       let data = {
         name: $("#add-name").val(),
-        desc: $("#add-desc").val(),
+        description: $("#add-description").val(),
         price: $("#add-price").val(),
       };
       axios
@@ -413,12 +413,12 @@
     // 顯示修改商品 modal, 並帶入當前商品資訊
     function showModifyModal(course) {
       course = JSON.parse(course);
-      $("#mod-name").val(course.course_name);
-      $("#mod-teacher").val(course.course_teacherID);
-      $("#mod-desc").val(course.course_desc);
-      $("#mod-price").val(course.course_price);
+      $("#mod-name").val(course.name);
+      $("#mod-teacher").val(course.teacherId);
+      $("#mod-description").val(course.description);
+      $("#mod-price").val(course.price);
 
-      selectedId = course.courseID;
+      selectedId = course.id;
 
       $("#modifyModal").modal("show");
     }
@@ -427,8 +427,8 @@
     function modSubmit() {
       let data = {
         name: $("#mod-name").val(),
-        teacherID: $("#mod-teacher").val(),
-        desc: $("#mod-desc").val(),
+        teacherId: $("#mod-teacher").val(),
+        description: $("#mod-description").val(),
         price: $("#mod-price").val(),
       };
 
@@ -437,7 +437,6 @@
           headers: { Authorization: localStorage.getItem("token") },
         })
         .then((res) => {
-          console.log(res);
           if (res.status === 200) {
             alert("修改成功！");
             this.closeModifyModal();
@@ -461,11 +460,11 @@
     function openDeleteModal(course) {
       course = JSON.parse(course);
       console.log(course);
-      $("#del-name").val(course.course_name);
-      $("#del-teacherId").val(course.course_teacherID);
+      $("#del-name").val(course.name);
+      $("#del-teacherId").val(course.teacherId);
       $("#deleteModal").modal("show");
 
-      selectedId = course.courseID;
+      selectedId = course.id;
     }
 
     // 關閉刪除商品 modal
@@ -477,7 +476,7 @@
       axios
         .delete(`/api/course/${selectedId}`, {
           headers: { Authorization: localStorage.getItem("token") },
-          data: { teacherID: $("#del-teacherId").val() },
+          data: { teacherId: $("#del-teacherId").val() },
         })
         .then((res) => {
           console.log(res);

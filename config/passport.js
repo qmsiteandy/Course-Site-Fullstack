@@ -31,15 +31,15 @@ passport.use(
           // 使用者已存在
           if (results && results[0]) {
             return cb(err, {
-              userID: results[0].insertId,
-              user_name: results[0].user_name,
-              user_permission: results[0].user_permission,
+              id: results[0].id,
+              name: results[0].name,
+              permission: results[0].permission,
             });
           }
           // // 使用者不存在，建立新資料
           else {
             mysql.query(
-              "INSERT INTO user (user_name, oauth_id) VALUE(?,?)",
+              "INSERT INTO user (name, oauth_id) VALUE(?,?)",
               [
                 profile.name.familyName + " " + profile.name.givenName,
                 profile.id,
@@ -47,10 +47,9 @@ passport.use(
               (error, results, fields) => {
                 if (error) throw error;
                 cb(null, {
-                  userID: results.insertId,
-                  user_name:
-                    profile.name.familyName + " " + profile.name.givenName,
-                  user_permission: 0,
+                  id: results.insertId,
+                  name: profile.name.familyName + " " + profile.name.givenName,
+                  permission: 0,
                 });
               }
             );
@@ -76,22 +75,22 @@ passport.use(
           // 使用者已存在
           if (results && results[0]) {
             return cb(err, {
-              userID: results[0].insertId,
-              user_name: results[0].user_name,
-              user_permission: results[0].user_permission,
+              id: results[0].id,
+              name: results[0].name,
+              permission: results[0].permission,
             });
           }
           // // 使用者不存在，建立新資料
           else {
             mysql.query(
-              "INSERT INTO user (user_name, oauth_id) VALUE(?,?)",
+              "INSERT INTO user (name, oauth_id) VALUE(?,?)",
               [profile.displayName, profile.id],
               (error, results, fields) => {
                 if (error) throw error;
                 cb(null, {
-                  userID: results.insertId,
-                  user_name: profile.displayName,
-                  user_permission: 0,
+                  id: results.insertId,
+                  name: profile.displayName,
+                  permission: 0,
                 });
               }
             );
