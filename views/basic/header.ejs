@@ -23,6 +23,7 @@
         <a class="navbar-brand" href="/"> Course Site </a>
         <div class="customer-area navbar-nav mr-5">
           <ul class="navbar-nav me-auto">
+            <li class="nav-link mr-5" id="username"></li>
             <li class="nav-item">
               <a class="nav-link" href="/login" id="login">登入</a>
             </li>
@@ -69,6 +70,7 @@
       }
       // 登入狀態
       else {
+        $("#username").text(`${user.name} 你好`);
         $("#login").hide();
         // 學生帳號
         if (user.permission == 0) {
