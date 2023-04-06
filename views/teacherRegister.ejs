@@ -72,7 +72,7 @@
         let config = {
           headers: { Authorization: localStorage.getItem("token") },
         };
-        console.log(config.Headers);
+
         axios
           .post("/api/admin/teacherRegister", data, config)
           .then((res) => {

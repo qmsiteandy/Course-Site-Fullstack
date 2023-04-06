@@ -14,7 +14,7 @@ router.post("/register", async (req, res, next) => {
 
   // 檢查 DB 是否已存在此帳號
   mysql.query(
-    "SELECT * FROM user WHERE user_account=?",
+    "SELECT * FROM user WHERE account=?",
     [account],
     (err, result) => {
       if (err) {
@@ -30,7 +30,7 @@ router.post("/register", async (req, res, next) => {
 
             // 將輸入資料以及加密後的密碼存入 DB
             mysql.query(
-              "INSERT INTO user (user_name, user_account, user_password) VALUES(?, ?, ?)",
+              "INSERT INTO user (name, account, password) VALUES(?, ?, ?)",
               [name, account, hash],
               (err, result) => {
                 if (err) {
@@ -56,7 +56,7 @@ router.post("/login", (req, res, next) => {
 
   // 在 DB 中找到對應的 account 資料
   mysql.query(
-    "SELECT * FROM user WHERE user_account=?",
+    "SELECT * FROM user WHERE account=?",
     [account],
     (err, result) => {
       if (result == null || result[0] == undefined) {
@@ -66,7 +66,7 @@ router.post("/login", (req, res, next) => {
         const userData = JSON.parse(JSON.stringify(result[0]));
         // 比對密碼
         bcrypt
-          .compare(password, userData.user_password)
+          .compare(password, userData.password)
           .then((isMatch) => {
             if (isMatch == false) {
               return res.status(404).send("帳號或密碼錯誤");
@@ -75,9 +75,9 @@ router.post("/login", (req, res, next) => {
             else {
               // 建立 JWT
               const tokenObj = {
-                userId: userData.userId,
-                name: userData.user_name,
-                permission: userData.user_permission,
+                id: userData.id,
+                name: userData.name,
+                permission: userData.permission,
               };
               const token = jwt.sign(tokenObj, process.env.JWT_SECRET, {
                 expiresIn: "12 h",
@@ -86,9 +86,9 @@ router.post("/login", (req, res, next) => {
               return res.status(200).send({
                 msg: "登入成功",
                 user: {
-                  userId: userData.userId,
-                  name: userData.user_name,
-                  permission: userData.user_permission,
+                  id: userData.id,
+                  name: userData.name,
+                  permission: userData.permission,
                 },
                 token: "JWT " + token,
               });

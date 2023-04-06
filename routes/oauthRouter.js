@@ -14,11 +14,12 @@ router.get(
   "/google/redirect",
   passport.authenticate("google", { session: false }),
   (req, res) => {
+    console.log(req.user);
     // 建立 JWT
     const tokenObj = {
-      userId: req.user.userId,
-      name: req.user.user_name,
-      permission: req.user.user_permission,
+      id: req.user.id,
+      name: req.user.name,
+      permission: req.user.permission,
     };
     const token = jwt.sign(tokenObj, process.env.JWT_SECRET, {
       expiresIn: "12 h",
@@ -42,9 +43,9 @@ router.get(
   function (req, res) {
     // 建立 JWT
     const tokenObj = {
-      userId: req.user.userId,
-      name: req.user.user_name,
-      permission: req.user.user_permission,
+      id: req.user.id,
+      name: req.user.name,
+      permission: req.user.permission,
     };
     const token = jwt.sign(tokenObj, process.env.JWT_SECRET, {
       expiresIn: "12 h",

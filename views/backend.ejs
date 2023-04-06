@@ -69,7 +69,7 @@
           </div>
         </div>
 
-        <%# 新增商品 modal %>
+        <%# 新增課程 modal %>
         <div
           id="addModal"
           class="modal fade"
@@ -106,14 +106,14 @@
                     />
                   </div>
                   <div class="form-group">
-                    <label for="add-desc" class="col-form-label mr-3"
+                    <label for="add-description" class="col-form-label mr-3"
                       >課程敘述:</label
                     >
                     <textarea
-                      id="add-desc"
+                      id="add-description"
                       type="text"
-                      class="add-desc"
-                      name="desc"
+                      class="add-description"
+                      name="description"
                     ></textarea>
                   </div>
                   <div class="form-group">
@@ -150,7 +150,7 @@
           </div>
         </div>
 
-        <%# 修改商品 modal %>
+        <%# 修改課程 modal %>
         <div
           id="modifyModal"
           class="modal fade"
@@ -162,7 +162,7 @@
           <div class="modal-dialog" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="modModalLabel">修改商品</h5>
+                <h5 class="modal-title" id="modModalLabel">修改課程資訊</h5>
                 <button
                   type="button"
                   class="close"
@@ -177,7 +177,7 @@
                 <form id="mod-form">
                   <div class="form-group">
                     <label for="mod-name" class="col-form-label mr-3"
-                      >商品名稱:</label
+                      >課程名稱:</label
                     >
                     <input
                       id="mod-name"
@@ -187,58 +187,37 @@
                     />
                   </div>
                   <div class="form-group">
-                    <label for="mod-desc" class="col-form-label mr-3"
-                      >商品敘述:</label
+                    <label for="mod-name" class="col-form-label mr-3"
+                      >教師名稱:</label
                     >
                     <input
-                      id="mod-desc"
+                      id="mod-teacher"
                       type="text"
-                      class="mod-desc"
-                      name="desc"
+                      class="mod-teacher"
+                      name="teacher"
+                      disabled
                     />
                   </div>
                   <div class="form-group">
-                    <label for="mod-amount" class="col-form-label mr-3"
-                      >商品價格:</label
+                    <label for="mod-description" class="col-form-label mr-3"
+                      >課程敘述:</label
                     >
                     <input
-                      id="mod-amount"
+                      id="mod-description"
                       type="text"
-                      class="mod-amount"
-                      name="amount"
+                      class="mod-description"
+                      name="description"
                     />
                   </div>
                   <div class="form-group">
-                    <label for="mod-inventory" class="col-form-label mr-3"
-                      >庫存數量:</label
+                    <label for="mod-price" class="col-form-label mr-3"
+                      >課程價格:</label
                     >
                     <input
-                      id="mod-inventory"
+                      id="mod-price"
                       type="text"
-                      class="mod-inventory"
-                      name="inventory"
-                    />
-                  </div>
-                  <div class="form-group">
-                    <label for="mod-status" class="col-form-label mr-3"
-                      >商品狀態:</label
-                    >
-                    <select id="mod-status" name="status">
-                      <option value="A">上架中</option>
-                      <option value="S">已下架</option>
-                    </select>
-                  </div>
-                  <div class="form-group">
-                    <label for="mod-img" class="col-form-label mr-3"
-                      >圖片上傳:</label
-                    >
-                    <!-- 需在每次上傳圖片的時候更新檔案 -->
-                    <input
-                      id="mod-img"
-                      type="file"
-                      class="mod-img"
-                      name="img"
-                      onchange="upload(event)"
+                      class="mod-price"
+                      name="price"
                     />
                   </div>
                 </form>
@@ -264,16 +243,89 @@
           </div>
         </div>
       </div>
+
+      <%# 刪除課程 modal %>
+      <div
+        id="deleteModal"
+        class="modal fade"
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="deleteModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="deleteModalLabel">刪除課程資訊</h5>
+              <button
+                type="button"
+                class="close"
+                data-dismiss="modal"
+                aria-label="Close"
+                onclick="closeDeleteModal()"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form id="del-form">
+                <div class="form-group">
+                  <label for="del-name" class="col-form-label mr-3"
+                    >課程名稱:</label
+                  ><input
+                    id="del-name"
+                    type="text"
+                    class="del-name"
+                    name="name"
+                    disabled
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="del-teacherId" class="col-form-label mr-3"
+                    >教師編號:</label
+                  ><input
+                    id="del-teacherId"
+                    type="text"
+                    class="del-teacherId"
+                    name="name"
+                    disabled
+                  />
+                </div>
+              </form>
+            </div>
+            <div class="modal-teacherId"></div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-primary"
+                onclick="deleteSubmit()"
+              >
+                確定刪除
+              </button>
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-dismiss="modal"
+                onclick="closeDeleteModal()"
+              >
+                取消
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- footer -->
     <%- include("./basic/footer.ejs") %>
   </body>
   <script>
+    let selectedId = "";
+
     $(document).ready(function init() {
       const user = JSON.parse(localStorage.getItem("user"));
       let apiUrl = "";
-      if (user.permission == 1) apiUrl = `/api/course/teacher/${user.userID}`;
+      if (user.permission == 1) apiUrl = `/api/course/teacher/${user.id}`;
       else if (user.permission == 2) apiUrl = `/api/course/`;
 
       axios
@@ -283,13 +335,13 @@
           if (res.status == 200 && res.data != null) {
             res.data.forEach((course) => {
               html += `<tr>
-                  <th>${course.course_name}</th>
-                  <th>${course.course_teacherID}</th>
-                  <th>${course.course_desc}</th>
-                  <th>${course.course_price}</th>
+                  <th>${course.name}</th>
+                  <th>${course.teacherId}</th>
+                  <th>${course.description}</th>
+                  <th>${course.price}</th>
                   <th>
                     <button
-                      id="showMod-${course.courseID}"
+                      id="showMod-${course.id}"
                       class="btn btn-primary"
                       data-toggle="modal"
                       data-target="#modifyModal"
@@ -298,7 +350,7 @@
                     </button>
                   </th>
                   <th>
-                    <button id="delete-${course.courseID}" class="btn btn-danger">刪除</button>
+                    <button id="delete-${course.id}" class="btn btn-danger">刪除</button>
                   </th>
                 </tr>`;
             });
@@ -306,12 +358,11 @@
 
             // 綁定刪除與修改商品的點擊事件, 並在點擊時傳入當前商品的資訊
             for (let i = 0; i < res.data.length; i++) {
-              $(`#showMod-${res.data[i].courseId}`).on("click", () => {
-                console.log(`#showMod-${res.data[i].courseId}`);
+              $(`#showMod-${res.data[i].id}`).on("click", () => {
                 showModifyModal(JSON.stringify(res.data[i]));
               });
-              $(`#delete-${res.data[i].courseId}`).on("click", () => {
-                deleteProduct(JSON.stringify(res.data[i]));
+              $(`#delete-${res.data[i].id}`).on("click", () => {
+                openDeleteModal(JSON.stringify(res.data[i]));
               });
             }
           } else {
@@ -337,7 +388,7 @@
     function addSubmit() {
       let data = {
         name: $("#add-name").val(),
-        desc: $("#add-desc").val(),
+        description: $("#add-description").val(),
         price: $("#add-price").val(),
       };
       axios
@@ -350,7 +401,7 @@
             this.closeAddModal();
             location.reload();
           } else {
-            alert("新增失敗，請洽管理員。");
+            alert(res.response);
           }
         })
         .catch((error) => {
@@ -360,22 +411,87 @@
     }
 
     // 顯示修改商品 modal, 並帶入當前商品資訊
-    function showModifyModal(product) {
-      console.log(product);
-      product = JSON.parse(product);
-      $("#mod-name").val(product.name);
-      $("#mod-desc").val(product.description);
-      $("#mod-amount").val(product.amount);
-      $("#mod-inventory").val(product.inventory);
-      $("#mod-status").val(product.status);
-      $("#modifyModal").modal("show");
+    function showModifyModal(course) {
+      course = JSON.parse(course);
+      $("#mod-name").val(course.name);
+      $("#mod-teacher").val(course.teacherId);
+      $("#mod-description").val(course.description);
+      $("#mod-price").val(course.price);
 
-      selectedId = product.id;
+      selectedId = course.id;
+
+      $("#modifyModal").modal("show");
+    }
+
+    // 修改商品
+    function modSubmit() {
+      let data = {
+        name: $("#mod-name").val(),
+        teacherId: $("#mod-teacher").val(),
+        description: $("#mod-description").val(),
+        price: $("#mod-price").val(),
+      };
+
+      axios
+        .put(`/api/course/${selectedId}`, data, {
+          headers: { Authorization: localStorage.getItem("token") },
+        })
+        .then((res) => {
+          if (res.status === 200) {
+            alert("修改成功！");
+            this.closeModifyModal();
+            location.reload();
+          } else {
+            alert("修改失敗，請洽管理員。");
+          }
+        })
+        .catch((error) => {
+          alert("系統發生錯誤，請洽管理員。");
+          location.reload();
+        });
     }
 
     // 關閉修改商品 modal
     function closeModifyModal() {
       $("#modifyModal").modal("hide");
+    }
+
+    // 開啟刪除商品 modal
+    function openDeleteModal(course) {
+      course = JSON.parse(course);
+      console.log(course);
+      $("#del-name").val(course.name);
+      $("#del-teacherId").val(course.teacherId);
+      $("#deleteModal").modal("show");
+
+      selectedId = course.id;
+    }
+
+    // 關閉刪除商品 modal
+    function closeDeleteModal() {
+      $("#deleteModal").modal("hide");
+    }
+
+    function deleteSubmit() {
+      axios
+        .delete(`/api/course/${selectedId}`, {
+          headers: { Authorization: localStorage.getItem("token") },
+          data: { teacherId: $("#del-teacherId").val() },
+        })
+        .then((res) => {
+          console.log(res);
+          if (res.status === 200) {
+            alert("刪除成功！");
+            this.closeDeleteModal();
+            location.reload();
+          } else {
+            alert("刪除失敗，請洽管理員。");
+          }
+        })
+        .catch((error) => {
+          alert("系統發生錯誤，請洽管理員。");
+          location.reload();
+        });
     }
   </script>
 </html>

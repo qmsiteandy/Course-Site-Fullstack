@@ -19,7 +19,7 @@ router.post(
 
     // 檢查 DB 是否已存在此帳號
     mysql.query(
-      "SELECT * FROM user WHERE user_account=?",
+      "SELECT * FROM user WHERE account=?",
       [account],
       (err, result) => {
         if (err) {
@@ -35,8 +35,8 @@ router.post(
 
               // 將輸入資料以及加密後的密碼存入 DB
               mysql.query(
-                "INSERT INTO user (user_name, user_account, user_password, user_permission) VALUES(?, ?, ?, ?)",
-                [name, account, hash, 2],
+                "INSERT INTO user (name, account, password, permission) VALUES(?, ?, ?, ?)",
+                [name, account, hash, 1],
                 (err, result) => {
                   if (err) {
                     next(err);
