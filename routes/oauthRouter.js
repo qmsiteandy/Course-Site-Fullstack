@@ -14,7 +14,6 @@ router.get(
   "/google/redirect",
   passport.authenticate("google", { session: false }),
   (req, res) => {
-    console.log(req.user);
     // 建立 JWT
     const tokenObj = {
       id: req.user.id,

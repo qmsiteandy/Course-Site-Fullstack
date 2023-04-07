@@ -76,7 +76,6 @@
         axios
           .post("/api/admin/teacherRegister", data, config)
           .then((res) => {
-            console.log("res", res);
             // 註冊成功
             if (res.status == 201) {
               alert(res.data);

@@ -459,7 +459,7 @@
     // 開啟刪除商品 modal
     function openDeleteModal(course) {
       course = JSON.parse(course);
-      console.log(course);
+
       $("#del-name").val(course.name);
       $("#del-teacherId").val(course.teacherId);
       $("#deleteModal").modal("show");
@@ -479,7 +479,6 @@
           data: { teacherId: $("#del-teacherId").val() },
         })
         .then((res) => {
-          console.log(res);
           if (res.status === 200) {
             alert("刪除成功！");
             this.closeDeleteModal();

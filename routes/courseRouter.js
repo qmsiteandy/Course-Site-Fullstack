@@ -103,7 +103,6 @@ router.delete(
   "/:id",
   passport.authenticate("jwt", { session: false }),
   (req, res, next) => {
-    console.log(req.body, req.user);
     // 確認權限是否為 admin 或 對應的 teacher
     if (
       req.user.permission == 0 ||
