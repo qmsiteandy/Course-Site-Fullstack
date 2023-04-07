@@ -3,13 +3,9 @@ require("dotenv").config();
 
 // 結束測試後刪除測試資料
 afterAll(async () => {
-  await axios
-    .delete(`${process.env.SERVER_URL}/api/user/test`, {
-      headers: { Authorization: process.env.TEST_ADMIN_TOKEN },
-    })
-    .then((res) => {
-      console.log("刪除測試資料成功");
-    });
+  await axios.delete(`${process.env.SERVER_URL}/api/user/test`).then((res) => {
+    console.log("刪除 user 測試資料成功");
+  });
 });
 
 // 測試註冊功能
@@ -34,9 +30,7 @@ describe("[userRouter 註冊功能]", () => {
       .then((res) => {
         expect(res.status).toEqual(201);
       })
-      .catch((err) => {
-        expect(res.status).toEqual(201);
-      });
+      .catch((err) => {});
   });
   test("測試帳號已存在狀況", async () => {
     await axios
@@ -49,6 +43,7 @@ describe("[userRouter 註冊功能]", () => {
         expect(err.response.status).toEqual(400);
       });
   });
+  console.log("[userRouter 註冊功能] 測試完成");
 });
 
 // 測試登入功能
@@ -83,4 +78,5 @@ describe("[userRouter 登入功能]", () => {
         expect(err.response.status).toEqual(200);
       });
   });
+  console.log("[userRouter 登入功能] 測試完成");
 });

@@ -50,6 +50,14 @@ router.post("/", async (req, res, next) => {
   );
 });
 
+// 刪除 test 帳戶
+router.delete("/test", (req, res, next) => {
+  mysql.query("DELETE FROM user WHERE name LIKE '%test%'", (err, result) => {
+    if (err) next(err);
+    return res.status(200).send("刪除成功");
+  });
+});
+
 // 刪除帳戶
 router.delete(
   "/:account",
