@@ -62,7 +62,11 @@ router.post(
       [req.user.id, name, description, price],
       (err, result) => {
         if (err) next(err);
-        else return res.status(201).send("新增課程成功");
+        else
+          return res.status(201).json({
+            msg: "新增課程成功",
+            result: { insertId: result.insertId },
+          });
       }
     );
   }

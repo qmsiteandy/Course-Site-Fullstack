@@ -30,6 +30,7 @@ describe("[courseRouter 發布課程]", () => {
   console.log("[courseRouter 發布課程] 測試完成");
 });
 
+// 測試修改課程功能
 describe("[courseRouter 修改課程]", () => {
   test("測試發布課程成功", async () => {
     await axios

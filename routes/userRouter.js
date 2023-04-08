@@ -39,7 +39,10 @@ router.post("/", async (req, res, next) => {
                 if (err) {
                   next(err);
                 } else {
-                  return res.status(201).send("註冊成功！");
+                  return res.status(201).json({
+                    msg: "註冊成功！",
+                    result: { insertId: result.insertId },
+                  });
                 }
               }
             );
@@ -60,10 +63,10 @@ router.delete("/test", (req, res, next) => {
 
 // 刪除帳戶
 router.delete(
-  "/:account",
+  "/:id",
   passport.authenticate("jwt", { session: false }),
   (req, res, next) => {
-    const { account } = req.params;
+    const { id } = req.params;
 
     console.log(account);
     //檢查權限是否 Admin 或是否為自己的帳戶
