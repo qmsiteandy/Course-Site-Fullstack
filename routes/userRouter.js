@@ -3,11 +3,13 @@ const router = express.Router();
 const mysql = require("../config/mysqlConnection");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { connect } = require("../config/mysqlConnection");
+const passport = require("passport");
 
-router.post("/register", async (req, res, next) => {
+// 用戶註冊
+router.post("/", async (req, res, next) => {
   // 取得傳入資料並檢查有無缺漏
   const { name, account, password } = req.body;
+
   if (!name || !account || !password) {
     return res.status(400).send("缺少部分參數資料");
   }
@@ -20,6 +22,7 @@ router.post("/register", async (req, res, next) => {
       if (err) {
         next(err);
       }
+
       if (result.length != 0) {
         return res.status(400).send("此帳號已存在");
       } else {
@@ -36,7 +39,10 @@ router.post("/register", async (req, res, next) => {
                 if (err) {
                   next(err);
                 } else {
-                  return res.status(201).send("註冊成功！");
+                  return res.status(201).json({
+                    msg: "註冊成功！",
+                    result: { insertId: result.insertId },
+                  });
                 }
               }
             );
@@ -47,6 +53,43 @@ router.post("/register", async (req, res, next) => {
   );
 });
 
+// 刪除 test 帳戶
+router.delete("/test", (req, res, next) => {
+  mysql.query("DELETE FROM user WHERE name LIKE '%test%'", (err, result) => {
+    if (err) next(err);
+    return res.status(200).send("刪除成功");
+  });
+});
+
+// 刪除帳戶
+router.delete(
+  "/:id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res, next) => {
+    const { id } = req.params;
+
+    console.log(account);
+    //檢查權限是否 Admin 或是否為自己的帳戶
+    if (
+      (req.user.permission == 0 || req.user.permission == 1) &&
+      req.user.account != account
+    ) {
+      return res.status(403).send("權限不足");
+    }
+
+    // 操作 DB
+    mysql.query(
+      "DELETE FROM user WHERE account=?",
+      [account],
+      (err, result) => {
+        if (err) next(err);
+        res.status(200).send("刪除成功");
+      }
+    );
+  }
+);
+
+// 用戶登入
 router.post("/login", (req, res, next) => {
   // 取得傳入資料並檢查有無缺漏
   const { account, password } = req.body;

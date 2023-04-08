@@ -62,7 +62,11 @@ router.post(
       [req.user.id, name, description, price],
       (err, result) => {
         if (err) next(err);
-        else return res.status(201).send("新增課程成功");
+        else
+          return res.status(201).json({
+            msg: "新增課程成功",
+            result: { insertId: result.insertId },
+          });
       }
     );
   }
@@ -98,12 +102,19 @@ router.put(
   }
 );
 
-// 刪除課程
+// 刪除 test 課程
+router.delete("/test", (req, res, next) => {
+  mysql.query("DELETE FROM course WHERE name LIKE '%test%'", (err, result) => {
+    if (err) next(err);
+    return res.status(200).send("刪除成功");
+  });
+});
+
+// 刪除課程 by ID
 router.delete(
   "/:id",
   passport.authenticate("jwt", { session: false }),
   (req, res, next) => {
-    console.log(req.body, req.user);
     // 確認權限是否為 admin 或 對應的 teacher
     if (
       req.user.permission == 0 ||

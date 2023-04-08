@@ -70,11 +70,11 @@
           password: $(".password").val(),
         };
         axios
-          .post("/api/user/register", data)
+          .post("/api/user/", data)
           .then((res) => {
             // 註冊成功
             if (res.status == 201) {
-              alert(res.data);
+              alert(res.data.msg);
               window.location.href = "/login";
             }
           })
