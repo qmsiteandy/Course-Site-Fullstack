@@ -43,7 +43,6 @@ describe("[userRouter 註冊功能]", () => {
         expect(err.response.status).toEqual(400);
       });
   });
-  console.log("[userRouter 註冊功能] 測試完成");
 });
 
 // 測試登入功能
@@ -78,5 +77,4 @@ describe("[userRouter 登入功能]", () => {
         expect(err.response.status).toEqual(200);
       });
   });
-  console.log("[userRouter 登入功能] 測試完成");
 });
