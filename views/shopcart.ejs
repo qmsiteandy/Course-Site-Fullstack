@@ -4,7 +4,6 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="/css/bootstrap.css" />
 
     <title>Course Site</title>
   </head>
@@ -25,7 +24,8 @@
             <thead class="text-center">
               <tr>
                 <th>課程名稱</th>
-                <th>單價</th>
+                <th>教師</th>
+                <th>價格</th>
                 <th>移除</th>
               </tr>
             </thead>
@@ -90,4 +90,46 @@
     <!-- footer -->
     <%- include("./basic/footer.ejs") %>
   </body>
+  <script>
+    let cartList = [];
+
+    $(document).ready(function init() {
+      axios
+        .get("/api/cart", {
+          headers: { Authorization: localStorage.getItem("token") },
+        })
+        .then((res) => {
+          // 將課程資訊存入陣列中
+          if (res.status == 200) {
+            cartList = res.data;
+          }
+
+          console.log(cartList);
+
+          let html = "";
+          let total = 0;
+          if (cartList.length == 0) {
+          } else {
+            for (let i = 0; i < cartList.length; i++) {
+              // 新增每一筆產品資訊至 html 中
+              html += `<tr id="content-${cartList[i].id}">
+                        <th>${cartList[i].name}</th>
+                        <th>${cartList[i].teacherName}</th>
+                        <th>${cartList[i].price}</th>
+                        <th><button id="delete-${cartList[i].id}" class="btn btn-danger">刪除</button></th>
+                    </tr>`;
+              // 計算總價
+              total += cartList[i].price;
+            }
+            $(".products-content").html(html);
+            $("#total").text(total);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+          alert("系統發生錯誤，請洽管理員。");
+          location.reload();
+        });
+    });
+  </script>
 </html>
