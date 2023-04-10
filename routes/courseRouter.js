@@ -5,10 +5,13 @@ const mysql = require("../config/mysqlConnection");
 
 // 選取全部課程
 router.get("/", (req, res, next) => {
-  mysql.query("SELECT * FROM course", (err, result) => {
-    if (err) next(err);
-    else return res.status(200).send(result);
-  });
+  mysql.query(
+    "SELECT course.id, course.name as name, course.description, course.price, user.name as teacherName FROM `course` LEFT JOIN `user` ON course.teacherId = user.id",
+    (err, result) => {
+      if (err) next(err);
+      else return res.status(200).send(result);
+    }
+  );
 });
 
 // 選取老師的所有課程
