@@ -12,7 +12,7 @@ router.post(
 
     // 只有學生可以將課程加入購物車
     if (req.user.permission != 0) {
-      return res.status(403).send("限學生帳號可進行加入購物車功能");
+      return res.status(403).send("限學生帳號可進行此操作");
     }
 
     // 將 courseId 推入 courseId_array 中
@@ -27,7 +27,7 @@ router.post(
         new: true, // 回傳更新後的內容
       }
     );
-    return res.status(200).send(result);
+    return res.status(200).send("購物車新增成功");
 
     // // 從資料庫找出 cart 資料
     // let cart = await Cart.findOne({ studentId: req.user.id });
@@ -56,6 +56,32 @@ router.post(
     //     return res.status(200).send("新增購物車成功");
     //   }
     // }
+  }
+);
+
+// 刪除購物車內容
+router.delete(
+  "/:courseId",
+  passport.authenticate("jwt", { session: false }),
+  async (req, res, next) => {
+    const { courseId } = req.params;
+
+    // 只有學生可以將課程加入購物車
+    if (req.user.permission != 0) {
+      return res.status(403).send("限學生帳號可進行此操作");
+    }
+
+    // 使用 $pull 刪除 array 中的項目
+    const result = await Cart.findOneAndUpdate(
+      { studentId: req.user.id },
+      {
+        $pull: { courseId_array: courseId },
+      },
+      {
+        new: true, // 回傳更新後的內容
+      }
+    );
+    return res.status(200).send("購物車刪除成功");
   }
 );
 
