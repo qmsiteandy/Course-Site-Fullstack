@@ -104,8 +104,6 @@
             cartList = res.data;
           }
 
-          console.log(cartList);
-
           let html = "";
           let total = 0;
           if (cartList.length == 0) {
@@ -123,6 +121,13 @@
             }
             $(".products-content").html(html);
             $("#total").text(total);
+
+            // 綁定刪除購物車的事件
+            for (let i = 0; i < cartList.length; i++) {
+              $(`#delete-${cartList[i].id}`).on("click", () => {
+                remove(cartList[i].id);
+              });
+            }
           }
         })
         .catch((err) => {
@@ -131,5 +136,21 @@
           location.reload();
         });
     });
+
+    function remove(id) {
+      axios
+        .delete(`/api/cart/${id}`, {
+          headers: { Authorization: localStorage.getItem("token") },
+        })
+        .then((res) => {
+          alert(res.data);
+          location.reload();
+        })
+        .catch((err) => {
+          console.log(err);
+          alert("系統發生錯誤，請洽管理員。");
+          location.reload();
+        });
+    }
   </script>
 </html>
