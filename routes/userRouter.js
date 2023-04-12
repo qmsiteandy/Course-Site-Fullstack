@@ -82,7 +82,7 @@ router.delete(
       [account],
       (err, result) => {
         if (err) next(err);
-        res.status(200).send("刪除成功");
+        return res.status(200).send("刪除成功");
       }
     );
   }
