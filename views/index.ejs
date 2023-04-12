@@ -67,7 +67,6 @@
 
           // 如果是學生
           if (user && user.permission == 0) {
-            console.log(1);
             // 綁定加入購物車點擊事件, 並點擊的商品資訊
             for (let i = 0; i < courseList.length; i++) {
               $(document).on("click", `#buy-${courseList[i].id}`, () => {

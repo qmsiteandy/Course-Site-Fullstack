@@ -37,6 +37,8 @@ app.use("/api/user", routes.userRouter);
 app.use("/api/admin", routes.adminRouter);
 app.use("/api/course", routes.courseRouter);
 app.use("/api/cart", routes.cartRouter);
+app.use("/api/mycourse", routes.mycourseRouter);
+app.use("/ecpay", routes.ecpayRouter);
 app.use("/oauth", routes.oauthRouter);
 
 // Error Handler

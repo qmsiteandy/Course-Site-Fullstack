@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const passport = require("../config/passport");
-const Cart = require("../models/cartModel");
+const { Cart } = require("../models");
 const mysql = require("../config/mysqlConnection");
 
 // 取得購物車所有課程資訊
@@ -10,23 +10,30 @@ router.get(
   passport.authenticate("jwt", { session: false }),
   async (req, res, next) => {
     // 從 MongoDB 中找尋對應使用者的購物車項目
-    let { courseId_array } = await Cart.findOne({
+    const findCart = await Cart.findOne({
       studentId: req.user.id,
     });
 
-    // 取出對應課程資料
-    mysql.query(
-      "SELECT course.id, course.name as name, course.description, course.price, user.name as teacherName \
-      FROM course LEFT JOIN user ON course.teacherId = user.id  \
-      WHERE course.id IN (?)",
-      [courseId_array],
-      (err, result) => {
-        if (err) {
-          next(err);
+    // 資料庫中有對應的購物車資料
+    if (findCart && findCart.courseId_array.length > 0) {
+      // 取出對應課程資料
+      mysql.query(
+        "SELECT course.id, course.name as name, course.description, course.price, user.name as teacherName \
+        FROM course LEFT JOIN user ON course.teacherId = user.id  \
+        WHERE course.id IN (?)",
+        [findCart.courseId_array],
+        (err, result) => {
+          if (err) {
+            next(err);
+          }
+          return res.status(200).send(result);
         }
-        return res.status(200).send(result);
-      }
-    );
+      );
+    }
+    // 如果資料庫中沒有對應資料，回傳空陣列
+    else {
+      return res.status(200).send([]);
+    }
   }
 );
 
@@ -44,7 +51,7 @@ router.post(
 
     // 將 courseId 推入 courseId_array 中
     // 使用 $addToSet 自動判斷新內容是否已存在 array 中，若無才新增
-    const result = await Cart.findOneAndUpdate(
+    await Cart.findOneAndUpdate(
       { studentId: req.user.id },
       {
         $addToSet: { courseId_array: courseId },
@@ -55,34 +62,6 @@ router.post(
       }
     );
     return res.status(200).send("購物車新增成功");
-
-    // // 從資料庫找出 cart 資料
-    // let cart = await Cart.findOne({ studentId: req.user.id });
-    // // 如果還沒有這個 cart 資料，新建立一筆
-    // if (!cart) {
-    //   new Cart({ studentId: req.user.id, courseId_array: [courseId] })
-    //     .save()
-    //     .then((data) => {
-    //       return res.status(200).send("新增購物車成功");
-    //     })
-    //     .catch((err) => {
-    //       next(err);
-    //     });
-    // }
-    // // 修改現存 cart 資料
-    // else {
-    //   // 確認是否已存在於 courseId_array 中
-    //   const found = cart.courseId_array.find((element) => element == courseId);
-    //   if (found) {
-    //     return res.status(400).send("此課程已存在購物車中");
-    //   } else {
-    //     // 插入 courseId_array 中
-    //     cart.courseId_array.push(courseId);
-    //     // 儲存更新後資料
-    //     await cart.save();
-    //     return res.status(200).send("新增購物車成功");
-    //   }
-    // }
   }
 );
 
@@ -99,7 +78,7 @@ router.delete(
     }
 
     // 使用 $pull 刪除 array 中的項目
-    const result = await Cart.findOneAndUpdate(
+    await Cart.findOneAndUpdate(
       { studentId: req.user.id },
       {
         $pull: { courseId_array: courseId },

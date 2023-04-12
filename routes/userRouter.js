@@ -68,7 +68,6 @@ router.delete(
   (req, res, next) => {
     const { id } = req.params;
 
-    console.log(account);
     //檢查權限是否 Admin 或是否為自己的帳戶
     if (
       (req.user.permission == 0 || req.user.permission == 1) &&
