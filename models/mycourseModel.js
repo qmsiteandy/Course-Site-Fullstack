@@ -1,4 +1,4 @@
-const mongoose = require(mongoose);
+const mongoose = require("mongoose");
 
 const mycourseSchema = new mongoose.Schema({
   studentId: { type: Number },
