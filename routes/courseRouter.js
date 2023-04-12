@@ -32,23 +32,6 @@ router.get("/:id", (req, res, next) => {
   });
 });
 
-// // 從關鍵字尋找
-// router.get("/search", (req, res, next) => {
-//   const { q } = req.query;
-
-//   if (q) {
-//     mysql.query(
-//       "SELECT * FROM course WHERE name LIKE %測試%",
-//       (err, result) => {
-//         if (err) next(err);
-//         else return res.status(200).send(result);
-//       }
-//     );
-//   } else {
-//     return res.status(400).send("請輸入搜尋參數");
-//   }
-// });
-
 // 發布新課程
 router.post(
   "/",

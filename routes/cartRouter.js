@@ -51,16 +51,21 @@ router.post(
 
     // 將 courseId 推入 courseId_array 中
     // 使用 $addToSet 自動判斷新內容是否已存在 array 中，若無才新增
-    await Cart.findOneAndUpdate(
-      { studentId: req.user.id },
-      {
-        $addToSet: { courseId_array: courseId },
-      },
-      {
-        upsert: true, // 如果沒有這筆 document 自動新增
-        new: true, // 回傳更新後的內容
-      }
-    );
+    try {
+      await Cart.findOneAndUpdate(
+        { studentId: req.user.id },
+        {
+          $addToSet: { courseId_array: courseId },
+        },
+        {
+          upsert: true, // 如果沒有這筆 document 自動新增
+          new: true, // 回傳更新後的內容
+        }
+      );
+    } catch (err) {
+      next(err);
+    }
+
     return res.status(200).send("購物車新增成功");
   }
 );
@@ -78,16 +83,20 @@ router.delete(
     }
 
     // 使用 $pull 刪除 array 中的項目
-    await Cart.findOneAndUpdate(
-      { studentId: req.user.id },
-      {
-        $pull: { courseId_array: courseId },
-      },
-      {
-        new: true, // 回傳更新後的內容
-      }
-    );
-    return res.status(200).send("購物車刪除成功");
+    try {
+      await Cart.findOneAndUpdate(
+        { studentId: req.user.id },
+        {
+          $pull: { courseId_array: courseId },
+        },
+        {
+          new: true, // 回傳更新後的內容
+        }
+      );
+      return res.status(200).send("購物車刪除成功");
+    } catch (err) {
+      next(err);
+    }
   }
 );
 
