@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon -e ejs,js app.js",
+    "start": "nodemon -e ejs,js,json app.js",
     "test": "jest --verbose"
   },
   "author": "",
@@ -27,6 +27,7 @@
     "passport-google-oauth20": "^2.0.0",
     "passport-jwt": "^4.0.1",
     "passport-jwt-cookiecombo": "^1.0.5",
+    "swagger-ui-express": "^4.6.2",
     "uuid": "^9.0.0"
   },
   "devDependencies": {

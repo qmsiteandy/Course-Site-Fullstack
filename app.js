@@ -5,6 +5,8 @@ const cookieParser = require("cookie-parser");
 const routes = require("./routes");
 const mongoose = require("mongoose");
 require("dotenv").config();
+const swaggerUi = require("swagger-ui-express");
+const swaggerFile = require("./swagger_output.json");
 
 // connect to MongoDB
 mongoose
@@ -40,6 +42,7 @@ app.use("/api/cart", routes.cartRouter);
 app.use("/api/mycourse", routes.mycourseRouter);
 app.use("/ecpay", routes.ecpayRouter);
 app.use("/oauth", routes.oauthRouter);
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
 // Error Handler
 app.use((err, req, res, next) => {
