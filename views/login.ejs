@@ -68,6 +68,10 @@
   </body>
 
   <script>
+    // 清除原本存在 localStorage 的項目
+    localStorage.clear("token");
+    localStorage.clear("user");
+
     function Login() {
       if ($(".account").val() == "") {
         alert("請輸入帳號");

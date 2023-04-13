@@ -64,7 +64,7 @@ router.delete("/test", (req, res, next) => {
 // 刪除帳戶
 router.delete(
   "/:id",
-  passport.authenticate("jwt", { session: false }),
+  passport.authenticate("jwt", { session: false, failureRedirect: "/login" }),
   (req, res, next) => {
     const { id } = req.params;
 

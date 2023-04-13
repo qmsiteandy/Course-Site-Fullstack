@@ -9,7 +9,7 @@ const { Cart, Mycourse } = require("../models");
 
 router.post(
   "/submitOrder",
-  passport.authenticate("jwt", { session: false }),
+  passport.authenticate("jwt", { session: false, failureRedirect: "/login" }),
   (req, res, next) => {
     const { order_courseId_list } = req.body;
     console.log(order_courseId_list.toString());

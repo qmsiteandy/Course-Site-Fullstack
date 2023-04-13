@@ -7,7 +7,7 @@ const mysql = require("../config/mysqlConnection");
 // 取得購物車所有課程資訊
 router.get(
   "/",
-  passport.authenticate("jwt", { session: false }),
+  passport.authenticate("jwt", { session: false, failureRedirect: "/login" }),
   async (req, res, next) => {
     // 從 MongoDB 中找尋對應使用者的購物車項目
     const findCart = await Cart.findOne({
@@ -40,7 +40,7 @@ router.get(
 // 新增購物車內容
 router.post(
   "/:courseId",
-  passport.authenticate("jwt", { session: false }),
+  passport.authenticate("jwt", { session: false, failureRedirect: "/login" }),
   async (req, res, next) => {
     const { courseId } = req.params;
 
@@ -73,7 +73,7 @@ router.post(
 // 刪除購物車內容
 router.delete(
   "/:courseId",
-  passport.authenticate("jwt", { session: false }),
+  passport.authenticate("jwt", { session: false, failureRedirect: "/login" }),
   async (req, res, next) => {
     const { courseId } = req.params;
 
