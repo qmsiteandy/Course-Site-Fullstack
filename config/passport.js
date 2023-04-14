@@ -9,7 +9,7 @@ const cookieTokenExtrator = (req) => {
   let token = null;
   if (req && req.cookies) {
     token = req.cookies["token"];
-    token = token.replace(["jwt", " "], ""); // 去除空白及 jwt 前綴字
+    token = token.replace("JWT ", ""); // 去除空白及 jwt 前綴字
   }
   return token;
 };
