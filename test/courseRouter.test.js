@@ -22,7 +22,7 @@ describe("[courseRouter 發布課程]", () => {
           description: "test",
           price: 0,
         },
-        { headers: { Authorization: process.env.TEST_ADMIN_TOKEN } }
+        { headers: { Cookie: `token=${process.env.TEST_ADMIN_TOKEN}` } }
       )
       .then((res) => {
         test_course_id = res.data.result.insertId;
@@ -43,7 +43,7 @@ describe("[courseRouter 修改課程]", () => {
           description: "123456789",
           price: 0,
         },
-        { headers: { Authorization: process.env.TEST_ADMIN_TOKEN } }
+        { headers: { Cookie: `token=${process.env.TEST_ADMIN_TOKEN}` } }
       )
       .then((res) => {
         expect(res.status).toEqual(200);
@@ -57,7 +57,7 @@ describe("[courseRouter 刪除課程]", () => {
   test("測試刪除課程成功", (done) => {
     axios
       .delete(`${process.env.SERVER_URL}/api/course/${test_course_id}`, {
-        headers: { Authorization: process.env.TEST_ADMIN_TOKEN },
+        headers: { Cookie: `token=${process.env.TEST_ADMIN_TOKEN}` },
       })
       .then((res) => {
         expect(res.status).toEqual(200);
