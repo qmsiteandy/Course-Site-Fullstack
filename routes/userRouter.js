@@ -53,7 +53,7 @@ router.post("/", async (req, res, next) => {
   );
 });
 
-// 刪除 test 帳戶
+// 刪除 test 帳戶，主要用於單元測試
 router.delete("/test", (req, res, next) => {
   mysql.query("DELETE FROM user WHERE name LIKE '%test%'", (err, result) => {
     if (err) next(err);
@@ -64,7 +64,7 @@ router.delete("/test", (req, res, next) => {
 // 刪除帳戶
 router.delete(
   "/:id",
-  passport.authenticate("jwt", { session: false, failureRedirect: "/login" }),
+  passport.authenticate("jwt", { session: false }),
   (req, res, next) => {
     const { id } = req.params;
 

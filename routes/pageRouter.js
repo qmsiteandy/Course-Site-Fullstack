@@ -9,6 +9,7 @@ router.get("/", (req, res) => {
 router.get("/login", (req, res) => {
   res.render("login.ejs");
 });
+
 router.get("/register", (req, res) => {
   res.render("register.ejs");
 });
@@ -17,20 +18,48 @@ router.get("/course/:id", (req, res) => {
   res.render("coursePage.ejs");
 });
 
-router.get("/mycourse", (req, res) => {
-  res.render("mycourse.ejs");
-});
+router.get(
+  "/mycourse",
+  passport.authenticate("jwt", {
+    session: false,
+    failureRedirect: "/login?msg=登入token認證過期，請重新登入！",
+  }),
+  (req, res) => {
+    res.render("mycourse.ejs");
+  }
+);
 
-router.get("/backend", (req, res) => {
-  res.render("backend.ejs");
-});
+router.get(
+  "/backend",
+  passport.authenticate("jwt", {
+    session: false,
+    failureRedirect: "/login?msg=登入token認證過期，請重新登入！",
+  }),
+  (req, res) => {
+    res.render("backend.ejs");
+  }
+);
 
-router.get("/teacher_register", (req, res) => {
-  res.render("teacherRegister.ejs");
-});
+router.get(
+  "/teacher_register",
+  passport.authenticate("jwt", {
+    session: false,
+    failureRedirect: "/login?msg=登入token認證過期，請重新登入！",
+  }),
+  (req, res) => {
+    res.render("teacherRegister.ejs");
+  }
+);
 
-router.get("/shopcart", (req, res) => {
-  res.render("shopcart.ejs");
-});
+router.get(
+  "/shopcart",
+  passport.authenticate("jwt", {
+    session: false,
+    failureRedirect: "/login?msg=登入token認證過期，請重新登入！",
+  }),
+  (req, res) => {
+    res.render("shopcart.ejs");
+  }
+);
 
 module.exports = router;
