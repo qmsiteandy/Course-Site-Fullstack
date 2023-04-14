@@ -70,7 +70,7 @@
   <script>
     // 清除原本存在 storage 的登入資料
     localStorage.clear("user");
-    document.cookie = "token= ; expires=Thu, 01 Jan 1970 00:00:00 GMT"; // 設定 cookie 過期就會刪掉了
+    document.cookie = "token= ; expires=Thu, 01 Jan 1970 00:00:00 GMT"; // 設定過期就會刪掉了
 
     // 取得 query string 的訊息，如果有訊息則跳出 Alert 通知
     const params = new Proxy(new URLSearchParams(window.location.search), {
@@ -97,6 +97,7 @@
         .then((res) => {
           if (res.status === 200) {
             localStorage.setItem("user", JSON.stringify(res.data.user));
+            console.log(res.data.token, typeof res.data.token);
             document.cookie = `token=${res.data.token}`;
             alert(res.data.msg);
             window.location.href = "/";

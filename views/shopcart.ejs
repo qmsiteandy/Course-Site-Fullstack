@@ -58,9 +58,7 @@
 
     $(document).ready(function init() {
       axios
-        .get("/api/cart", {
-          headers: { Authorization: localStorage.getItem("token") },
-        })
+        .get("/api/cart")
         .then((res) => {
           // 將課程資訊存入陣列中
           if (res.status == 200) {
@@ -102,9 +100,7 @@
 
     function remove(id) {
       axios
-        .delete(`/api/cart/${id}`, {
-          headers: { Authorization: localStorage.getItem("token") },
-        })
+        .delete(`/api/cart/${id}`)
         .then((res) => {
           alert(res.data);
           location.reload();
@@ -126,15 +122,9 @@
 
       // 呼叫付款 API
       axios
-        .post(
-          "/ecpay/submitOrder",
-          {
-            order_courseId_list,
-          },
-          {
-            headers: { Authorization: localStorage.getItem("token") },
-          }
-        )
+        .post("/ecpay/submitOrder", {
+          order_courseId_list,
+        })
         .then((res) => {
           if (res.status === 200) {
             // 因綠界SDK產生的資訊中帶有javascript自動submit, 所以只要在成功取得導頁資訊後, 將資訊新增進頁面中即可自動轉頁

@@ -7,8 +7,8 @@ const mysql = require("./mysqlConnection");
 
 const cookieTokenExtrator = (req) => {
   let token = null;
-  if (req && req.cookies) {
-    token = req.cookies["token"];
+  if (req.cookies && req.cookies.token) {
+    token = req.cookies.token;
     token = token.replace("JWT ", ""); // 去除空白及 jwt 前綴字
   }
   return token;
