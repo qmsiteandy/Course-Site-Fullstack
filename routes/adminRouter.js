@@ -6,7 +6,7 @@ const bcrypt = require("bcrypt");
 
 router.post(
   "/teacherRegister",
-  passport.authenticate("jwt", { session: false, failureRedirect: "/login" }),
+  passport.authenticate("jwt", { session: false }),
   (req, res, next) => {
     // 確認權限是否為 admin
     if (req.user.permission < 2) return res.status(403).send("權限不足");

@@ -35,7 +35,7 @@ router.get("/:id", (req, res, next) => {
 // 發布新課程
 router.post(
   "/",
-  passport.authenticate("jwt", { session: false, failureRedirect: "/login" }),
+  passport.authenticate("jwt", { session: false }),
   (req, res, next) => {
     // 確認權限是否為 admin 或 teacher
     if (req.user.permission < 1) return res.status(403).send("權限不足");
@@ -61,7 +61,7 @@ router.post(
 // 修改課程
 router.put(
   "/:id",
-  passport.authenticate("jwt", { session: false, failureRedirect: "/login" }),
+  passport.authenticate("jwt", { session: false }),
   (req, res, next) => {
     // 確認權限是否為 admin 或 對應的 teacher
     if (
@@ -99,7 +99,7 @@ router.delete("/test", (req, res, next) => {
 // 刪除課程 by ID
 router.delete(
   "/:id",
-  passport.authenticate("jwt", { session: false, failureRedirect: "/login" }),
+  passport.authenticate("jwt", { session: false }),
   (req, res, next) => {
     // 確認權限是否為 admin 或 對應的 teacher
     if (
