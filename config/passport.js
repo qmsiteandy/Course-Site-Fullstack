@@ -5,9 +5,18 @@ const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const FacebookStrategy = require("passport-facebook").Strategy;
 const mysql = require("./mysqlConnection");
 
+const cookieTokenExtrator = (req) => {
+  let token = null;
+  if (req && req.cookies) {
+    token = req.cookies["token"];
+    token = token.replace(["jwt", " "], ""); // 去除空白及 jwt 前綴字
+  }
+  return token;
+};
+
 const opts = {};
-opts.jwtFromRequest = ExtractJwt.fromAuthHeaderWithScheme("jwt");
 opts.secretOrKey = process.env.JWT_SECRET;
+opts.jwtFromRequest = cookieTokenExtrator; // 設定一個取得 jwt 的 method
 
 passport.use(
   new JwtStrategy(opts, (jwt_payload, done) => {
