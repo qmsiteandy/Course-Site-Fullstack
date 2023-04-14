@@ -19,7 +19,7 @@
   "paths": {
     "/api/user": {
       "post": {
-        "summary": "新增帳號",
+        "summary": "註冊帳號",
         "tags": ["user"],
         "requestBody": {
           "required": true,
@@ -83,6 +83,99 @@
         ],
         "responses": {
           "200": { "description": "刪除成功" },
+          "401": {
+            "description": "未授權 (無效 Token)"
+          },
+          "403": {
+            "description": "權限不足"
+          }
+        }
+      }
+    },
+    "/api/user/login": {
+      "post": {
+        "tags": ["user"],
+        "summary": "帳號登入",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "account": { "type": "string" },
+                  "password": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "登入成功",
+            "content": {
+              "plain/text": {
+                "schema": {
+                  "properties": {
+                    "msg": { "type": "string", "example": "登入成功" },
+                    "user": {
+                      "type": "object",
+                      "properties": {
+                        "id": { "type": "string" },
+                        "name": { "type": "string" },
+                        "permission": {
+                          "type": "integer",
+                          "description": "使用者身分代號： 0學生、1教師、2管理者"
+                        }
+                      }
+                    },
+                    "token": {
+                      "type": "string",
+                      "example": "JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTI2LCJuYW1lIjoiMTIzIiwicGVybWlzc2lvbiI6MCwiaWF0IjoxNjgxMjkwNTUzfQ._AUHI3hN8SIDkGq0eaw5FFCt--rzsFZaLd0NMJcH3jI"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "缺少帳號或密碼"
+          },
+          "404": { "description": "帳號或密碼錯誤" }
+        }
+      }
+    },
+    "/api/admin/teacherRegister": {
+      "post": {
+        "tags": ["admin"],
+        "summary": "新增教師帳號",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "JWT token",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "name": { "type": "string" },
+                  "account": { "type": "string" },
+                  "password": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "教師註冊成功" },
+          "400": { "description": "此教師帳號已存在" },
           "401": {
             "description": "未授權 (無效 Token)"
           },
