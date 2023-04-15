@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const passport = require("../config/passport");
 
+/* 可直接進入的頁面 */
+
 router.get("/", (req, res) => {
   res.render("index.ejs");
 });
@@ -17,8 +19,13 @@ router.get("/course/:id", (req, res) => {
   res.render("coursePage.ejs");
 });
 
-// JWT token 失效訊息
-const token_fail_msg = "登入權證失效，請重新登入";
+router.get("/oauth-login-success", (req, res) => {
+  res.render("oauth-login-success.ejs");
+});
+
+/* 需要使用 JWT 驗證才可進入的頁面 */
+
+const token_fail_msg = "登入權證失效，請重新登入"; // JWT token 失效訊息
 
 router.get(
   "/mycourse",
