@@ -17,10 +17,9 @@
     const { token, user } = params;
 
     localStorage.setItem("user", user);
-    localStorage.setItem("token", token);
+    document.cookie = `token=${token}`;
 
     alert("登入成功");
-
     window.location.href = "/";
   </script>
 </html>

@@ -88,9 +88,7 @@
 
     function addCart(courseId) {
       axios
-        .post(`/api/cart/${courseId}`, null, {
-          headers: { Authorization: localStorage.getItem("token") },
-        })
+        .post(`/api/cart/${courseId}`)
         .then((res) => {
           // 將課程資訊存入陣列中
           if (res.status == 200) {

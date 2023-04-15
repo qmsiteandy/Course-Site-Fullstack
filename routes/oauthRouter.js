@@ -25,7 +25,7 @@ router.get(
     });
 
     return res.redirect(
-      `/oauth/login-success/?user=${JSON.stringify(req.user)}&token=${
+      `/oauth-login-success?user=${JSON.stringify(req.user)}&token=${
         "JWT " + token
       }`
     );
@@ -51,15 +51,15 @@ router.get(
     });
 
     return res.redirect(
-      `/oauth/login-success/?user=${JSON.stringify(req.user)}&token=${
-        "JWT " + token
+      `/oauth-login-success?user=${JSON.stringify(req.user)}&token=${
+        "JWT" + token
       }`
     );
   }
 );
 
-router.get("/login-success", (req, res) => {
-  res.render("oauth-login-success.ejs");
-});
+// router.get("/login-success", (req, res) => {
+//   res.render("oauth-login-success.ejs");
+// });
 
 module.exports = router;

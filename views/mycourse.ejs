@@ -23,9 +23,7 @@
   </body>
   <script>
     axios
-      .get("/api/mycourse", {
-        headers: { Authorization: localStorage.getItem("token") },
-      })
+      .get("/api/mycourse")
       .then((res) => {
         // 將課程資訊存入陣列中
         if (res.status == 200) {

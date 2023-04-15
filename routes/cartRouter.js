@@ -10,9 +10,14 @@ router.get(
   passport.authenticate("jwt", { session: false }),
   async (req, res, next) => {
     // 從 MongoDB 中找尋對應使用者的購物車項目
-    const findCart = await Cart.findOne({
-      studentId: req.user.id,
-    });
+    let findCart = null;
+    try {
+      findCart = await Cart.findOne({
+        studentId: req.user.id,
+      });
+    } catch (err) {
+      next(err);
+    }
 
     // 資料庫中有對應的購物車資料
     if (findCart && findCart.courseId_array.length > 0) {

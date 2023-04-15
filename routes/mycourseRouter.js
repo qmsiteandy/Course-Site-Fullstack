@@ -10,8 +10,9 @@ router.get(
   passport.authenticate("jwt", { session: false }),
   async (req, res, next) => {
     // 從 MongoDB 中找尋對應使用者的購物車項目
+    let findMycourse = null;
     try {
-      const findMycourse = await Mycourse.findOne({
+      findMycourse = await Mycourse.findOne({
         studentId: req.user.id,
       });
     } catch (err) {
