@@ -53,7 +53,7 @@ router.post("/", async (req, res, next) => {
   );
 });
 
-// 刪除 test 帳戶
+// 刪除 test 帳戶，主要用於單元測試
 router.delete("/test", (req, res, next) => {
   mysql.query("DELETE FROM user WHERE name LIKE '%test%'", (err, result) => {
     if (err) next(err);
@@ -82,7 +82,7 @@ router.delete(
       [account],
       (err, result) => {
         if (err) next(err);
-        res.status(200).send("刪除成功");
+        return res.status(200).send("刪除成功");
       }
     );
   }

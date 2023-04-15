@@ -64,17 +64,12 @@
         $(".password").val("");
         $(".confirm-password").val("");
       } else {
-        let data = {
-          name: $(".name").val(),
-          account: $(".account").val(),
-          password: $(".password").val(),
-        };
-        let config = {
-          headers: { Authorization: localStorage.getItem("token") },
-        };
-
         axios
-          .post("/api/admin/teacherRegister", data, config)
+          .post("/api/admin/teacherRegister", {
+            name: $(".name").val(),
+            account: $(".account").val(),
+            password: $(".password").val(),
+          })
           .then((res) => {
             // 註冊成功
             if (res.status == 201) {

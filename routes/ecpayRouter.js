@@ -66,20 +66,24 @@ router.post("/pay_success", async (req, res, next) => {
   const order_courseId_list = req.body.CustomField2.split(","); // 轉換為陣列
 
   // 移除購物車中已付款項目
-  await Cart.findOneAndUpdate(
-    { studentId: userId },
-    { $pull: { courseId_array: { $in: order_courseId_list } } }
-  );
-  // 將已付款項目加入我的課程中
-  await Mycourse.findOneAndUpdate(
-    { studentId: userId },
-    {
-      $addToSet: { courseId_array: { $each: order_courseId_list } },
-    },
-    {
-      upsert: true, // 如果沒有這筆 document 自動新增
-    }
-  );
+  try {
+    await Cart.findOneAndUpdate(
+      { studentId: userId },
+      { $pull: { courseId_array: { $in: order_courseId_list } } }
+    );
+    // 將已付款項目加入我的課程中
+    await Mycourse.findOneAndUpdate(
+      { studentId: userId },
+      {
+        $addToSet: { courseId_array: { $each: order_courseId_list } },
+      },
+      {
+        upsert: true, // 如果沒有這筆 document 自動新增
+      }
+    );
+  } catch (err) {
+    next(err);
+  }
 
   res.send("1|OK"); // 回傳讓綠界 Server 知道這筆訂單完成
 });
