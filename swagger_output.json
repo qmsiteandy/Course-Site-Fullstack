@@ -14,6 +14,7 @@
     { "name": "course", "description": "課程相關操作" },
     { "name": "mycourse", "description": "我的課程相關操作" },
     { "name": "cart", "description": "購物車相關操作" },
+    { "name": "oauth", "description": "OAuth 登入相關操作" },
     { "name": "ecpay", "description": "綠界付款相關操作" }
   ],
   "paths": {
@@ -72,8 +73,8 @@
             }
           },
           {
-            "name": "Authorization",
-            "in": "header",
+            "name": "token",
+            "in": "cookie",
             "required": true,
             "description": "JWT token",
             "schema": {
@@ -150,8 +151,8 @@
         "summary": "新增教師帳號",
         "parameters": [
           {
-            "name": "Authorization",
-            "in": "header",
+            "name": "token",
+            "in": "cookie",
             "required": true,
             "description": "JWT token",
             "schema": {
@@ -181,6 +182,469 @@
           },
           "403": {
             "description": "權限不足"
+          }
+        }
+      }
+    },
+    "/api/course": {
+      "get": {
+        "tags": ["course"],
+        "summary": "取得所有課程",
+        "responses": {
+          "200": {
+            "description": "取得所有課程資訊陣列",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "$ref": "#/components/schemas/courses"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["course"],
+        "summary": "發布新課程",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "cookie",
+            "required": true,
+            "description": "JWT token",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "name": { "type": "string" },
+                  "description": { "type": "string" },
+                  "price": { "type": "integer" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "新增成功",
+            "content": {
+              "plain/text": {
+                "schema": {
+                  "properties": {
+                    "msg": { "type": "string", "example": "新增課程成功" },
+                    "result": {
+                      "type": "object",
+                      "properties": {
+                        "insertId": { "type": "string" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": { "description": "未授權 (無效 Token)" },
+          "403": { "description": "權限不足" }
+        }
+      }
+    },
+    "/api/course/{id}": {
+      "get": {
+        "tags": ["course"],
+        "summary": "取得單筆課程",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "id for the user account",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "取得課程資訊",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "$ref": "#/components/schemas/courses"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["course"],
+        "summary": "修正課程資訊",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "cookie",
+            "required": true,
+            "description": "JWT token",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "id for the user account",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "name": { "type": "string" },
+                  "description": { "type": "string" },
+                  "price": { "type": "integer" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "修改成功" },
+          "400": { "description": "缺少資料" },
+          "401": { "description": "未授權 (無效 Token)" },
+          "403": { "description": "無權修改此課程 (非管理者或此課程教師" }
+        }
+      },
+      "delete": {
+        "tags": ["course"],
+        "summary": "刪除課程",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "cookie",
+            "required": true,
+            "description": "JWT token",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "id for the user account",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": { "description": "刪除成功" },
+          "401": { "description": "未授權 (無效 Token)" },
+          "403": { "description": "無權修改此課程 (非管理者或此課程教師" }
+        }
+      }
+    },
+    "/api/course/teacher/{id}": {
+      "get": {
+        "tags": ["course"],
+        "summary": "取得單位教師的課程",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "cookie",
+            "required": true,
+            "description": "JWT token",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "id for the user account",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "取得課程資訊",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "$ref": "#/components/schemas/courses"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/mycourse": {
+      "get": {
+        "tags": ["mycourse"],
+        "summary": "取得我的課程項目",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "cookie",
+            "required": true,
+            "description": "JWT token",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "回傳所有已購買課程資訊",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "$ref": "#/components/schemas/courses"
+                  }
+                }
+              }
+            }
+          },
+          "401": { "description": "未授權 (無效 Token)" }
+        }
+      }
+    },
+    "/api/cart": {
+      "get": {
+        "tags": ["cart"],
+        "summary": "取得購物車項目",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "cookie",
+            "required": true,
+            "description": "JWT token",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "回傳購物車中所有課程的資訊",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "$ref": "#/components/schemas/courses"
+                  }
+                }
+              }
+            }
+          },
+          "401": { "description": "未授權 (無效 Token)" }
+        }
+      }
+    },
+    "/api/cart/{courseId}": {
+      "post": {
+        "tags": ["cart"],
+        "summary": "新增購物車內容",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "cookie",
+            "required": true,
+            "description": "JWT token",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "courseId",
+            "in": "path",
+            "required": true,
+            "description": "課程編號",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": { "description": "購物車新增成功" },
+          "401": { "description": "未授權 (無效 Token)" },
+          "403": { "description": "限學生帳號可進行此操作" }
+        }
+      },
+      "delete": {
+        "tags": ["cart"],
+        "summary": "刪除購物車內容",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "cookie",
+            "required": true,
+            "description": "JWT token",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "courseId",
+            "in": "path",
+            "required": true,
+            "description": "課程編號",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": { "description": "購物車刪除成功" },
+          "401": { "description": "未授權 (無效 Token)" },
+          "403": { "description": "限學生帳號可進行此操作" }
+        }
+      }
+    },
+    "/oauth/google": {
+      "get": {
+        "tags": ["oauth"],
+        "summary": "呼叫 google oauth 登入功能",
+        "description": "自動重新引導至 google 登入頁面",
+        "responses": {
+          "302": { "description": "引導至 google 登入頁面" }
+        }
+      }
+    },
+    "/oauth/google/redirect": {
+      "get": {
+        "tags": ["oauth"],
+        "summary": "【由系統自動呼叫】google oauth 登入後自動引導呼叫此路徑",
+        "description": "登入成功後會引導至此路徑，並傳回使用者資訊",
+        "responses": {
+          "302": {
+            "description": "引導至 /oauth-login-success 頁面，並以 query string 帶入 user、token 資訊"
+          }
+        }
+      }
+    },
+    "/oauth/facebook": {
+      "get": {
+        "tags": ["oauth"],
+        "summary": "呼叫 facebook oauth 登入功能",
+        "description": "自動重新引導至 facebook 登入頁面",
+        "responses": {
+          "302": { "description": "引導至 facebook 登入頁面" }
+        }
+      }
+    },
+    "/oauth/facebook/redirect": {
+      "get": {
+        "tags": ["oauth"],
+        "summary": "【由系統自動呼叫】facebook oauth 登入後自動引導呼叫此路徑",
+        "description": "登入成功後會引導至此路徑，並傳回使用者資訊",
+        "responses": {
+          "302": {
+            "description": "引導至 /oauth-login-success 頁面，並以 query string 帶入 user、token 資訊"
+          }
+        }
+      }
+    },
+    "/ecpay/submitOrder": {
+      "post": {
+        "tags": ["ecpay"],
+        "summary": "呼叫綠界付款頁面",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "cookie",
+            "required": true,
+            "description": "JWT token",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "傳入要付款的 courseId 陣列",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "order_courseId_list": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "回傳綠界付款的 HTML 頁面內容"
+          }
+        }
+      }
+    },
+    "/ecpay/pay_success": {
+      "post": {
+        "tags": ["ecpay"],
+        "summary": "【由系統自動呼叫】綠界付款成功後，由綠界 Server ，由綠界 Server 呼叫",
+        "responses": { "200": { "description": "1|OK" } }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "courses": {
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "price": {
+            "type": "integer"
+          },
+          "teacherName": {
+            "type": "string"
           }
         }
       }
