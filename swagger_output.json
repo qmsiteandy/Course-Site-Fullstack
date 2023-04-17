@@ -643,6 +643,9 @@
           "price": {
             "type": "integer"
           },
+          "teacherId": {
+            "type": "string"
+          },
           "teacherName": {
             "type": "string"
           }
