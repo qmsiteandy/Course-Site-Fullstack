@@ -77,13 +77,6 @@
       get: (searchParams, prop) => searchParams.get(prop),
     });
     const msg = params.msg;
-    if (msg) alert(msg);
-
-    // 取得 query string 的訊息，如果有訊息則跳出 Alert 通知
-    const params = new Proxy(new URLSearchParams(window.location.search), {
-      get: (searchParams, prop) => searchParams.get(prop),
-    });
-    const msg = params.msg;
     // Alert 通知
     if (msg) alert(msg);
 
