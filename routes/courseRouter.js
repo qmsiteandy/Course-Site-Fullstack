@@ -14,24 +14,6 @@ router.get("/", (req, res, next) => {
   );
 });
 
-// 選取老師的所有課程
-router.get("/teacher/:id", (req, res, next) => {
-  const { id } = req.params;
-  mysql.query("SELECT * FROM course WHERE teacherId=?", [id], (err, result) => {
-    if (err) next(err);
-    else return res.status(200).send(result);
-  });
-});
-
-// 選取單筆課程
-router.get("/:id", (req, res, next) => {
-  const { id } = req.params;
-  mysql.query("SELECT * FROM course WHERE id=?", [id], (err, result) => {
-    if (err) next(err);
-    else return res.status(200).send(result);
-  });
-});
-
 // 發布新課程
 router.post(
   "/",
@@ -57,6 +39,19 @@ router.post(
     );
   }
 );
+
+// 選取單筆課程
+router.get("/:id", (req, res, next) => {
+  const { id } = req.params;
+  mysql.query(
+    "SELECT course.id, course.name as name, course.description, course.price, user.name as teacherName FROM `course` LEFT JOIN `user` ON course.teacherId = user.id WHERE course.id=?",
+    [id],
+    (err, result) => {
+      if (err) next(err);
+      else return res.status(200).send(result);
+    }
+  );
+});
 
 // 修改課程
 router.put(
@@ -119,5 +114,18 @@ router.delete(
     );
   }
 );
+
+// 選取老師的所有課程
+router.get("/teacher/:id", (req, res, next) => {
+  const { id } = req.params;
+  mysql.query(
+    "SELECT course.id, course.name as name, course.description, course.price, user.name as teacherName FROM `course` LEFT JOIN `user` ON course.teacherId = user.id WHERE course.teacherId=?",
+    [id],
+    (err, result) => {
+      if (err) next(err);
+      else return res.status(200).send(result);
+    }
+  );
+});
 
 module.exports = router;

@@ -58,8 +58,4 @@ router.get(
   }
 );
 
-// router.get("/login-success", (req, res) => {
-//   res.render("oauth-login-success.ejs");
-// });
-
 module.exports = router;
