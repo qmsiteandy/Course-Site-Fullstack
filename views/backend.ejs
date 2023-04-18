@@ -188,7 +188,7 @@
                   </div>
                   <div class="form-group">
                     <label for="mod-name" class="col-form-label mr-3"
-                      >教師名稱:</label
+                      >教師編號:</label
                     >
                     <input
                       id="mod-teacher"
@@ -431,18 +431,16 @@
       };
 
       axios
-        .put(`/api/course/${selectedId}`)
+        .put(`/api/course/${selectedId}`, data)
         .then((res) => {
           if (res.status === 200) {
             alert("修改成功！");
             this.closeModifyModal();
             location.reload();
-          } else {
-            alert("修改失敗，請洽管理員。");
           }
         })
         .catch((error) => {
-          alert("系統發生錯誤，請洽管理員。");
+          alert(error.response.data);
           location.reload();
         });
     }
@@ -478,12 +476,10 @@
             alert("刪除成功！");
             this.closeDeleteModal();
             location.reload();
-          } else {
-            alert("刪除失敗，請洽管理員。");
           }
         })
         .catch((error) => {
-          alert("系統發生錯誤，請洽管理員。");
+          alert(error.response.data);
           location.reload();
         });
     }

@@ -6,7 +6,7 @@ const mysql = require("../config/mysqlConnection");
 // 選取全部課程
 router.get("/", (req, res, next) => {
   mysql.query(
-    "SELECT course.id, course.name as name, course.description, course.price, user.name as teacherName FROM `course` LEFT JOIN `user` ON course.teacherId = user.id",
+    "SELECT course.id, course.name as name, course.description, course.price, user.id as teacherId, user.name as teacherName FROM `course` LEFT JOIN `user` ON course.teacherId = user.id",
     (err, result) => {
       if (err) next(err);
       else return res.status(200).send(result);
@@ -44,7 +44,7 @@ router.post(
 router.get("/:id", (req, res, next) => {
   const { id } = req.params;
   mysql.query(
-    "SELECT course.id, course.name as name, course.description, course.price, user.name as teacherName FROM `course` LEFT JOIN `user` ON course.teacherId = user.id WHERE course.id=?",
+    "SELECT course.id, course.name as name, course.description, course.price, user.id as teacherId, user.name as teacherName FROM `course` LEFT JOIN `user` ON course.teacherId = user.id WHERE course.id=?",
     [id],
     (err, result) => {
       if (err) next(err);
@@ -119,7 +119,7 @@ router.delete(
 router.get("/teacher/:id", (req, res, next) => {
   const { id } = req.params;
   mysql.query(
-    "SELECT course.id, course.name as name, course.description, course.price, user.name as teacherName FROM `course` LEFT JOIN `user` ON course.teacherId = user.id WHERE course.teacherId=?",
+    "SELECT course.id, course.name as name, course.description, course.price, user.id as teacherId, user.name as teacherName FROM `course` LEFT JOIN `user` ON course.teacherId = user.id WHERE course.teacherId=?",
     [id],
     (err, result) => {
       if (err) next(err);
