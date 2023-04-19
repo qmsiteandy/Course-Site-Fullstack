@@ -36,8 +36,12 @@ OAuth     | Passport
 
 # 功能介紹 & 運作邏輯
 ## 目錄
-[使用者註冊/登入/登出](#一使用者註冊登入登出)  
-[OAuth 登入](#二oauth-登入)
+[使用者註冊/登入/登出](#一使用者註冊登入登出)   
+[OAuth 登入](#二oauth-登入)  
+[JWT token 使用 & 權限控制](#三jwt-token-使用--權限控制)  
+[課程管理後台](#四課程管理後台)  
+[購物車操作](#五購物車操作)  
+[綠界付款](#六綠界付款)  
 
 
 ## 一、使用者註冊/登入/登出
@@ -123,7 +127,6 @@ OAuth     | Passport
         }
     );
     ```
-
 5. login-success 頁面是一個空畫面，會將 queryString 中的 user 存入 localStorage；token 存入 cookie 中，然後重新引導回到首頁，完成登入流程。 
    
     > **login-success page 設計目的？**  
@@ -133,14 +136,15 @@ OAuth     | Passport
     > 然而 **無法在一個 Response 中同時 send 資料及 redirect**，因此設計一個 login-success 空頁面，取得 queryString 中資訊儲存至 storage、再引導 Client 至首頁。
 
 
-## JWT token 使用 & 權限控制
+
+## 三、JWT token 使用 & 權限控制
 使用者登入後，瀏覽器會將 JWT token 存在 cookie 中，爾後所有的 request 傳送時都會自動在 header 中帶上。Server 端就是以這個 header cookie 中的 JWT token 來解析 token 有效性及判斷權限。
 
 本專案使用 [passport](https://www.npmjs.com/package/passport)、[passport-jwt](https://www.npmjs.com/package/passport-jwt) 完成此功能
 
 > [Passport 設定的程式碼](https://github.com/qmsiteandy/Course-Site-Fullstack/blob/master/config/passport.js)
 
-### JWT 權限控置流程圖如下：
+### 3-1：JWT 權限控置流程圖如下：
 ![JWT 權限控置流程圖](https://i.imgur.com/S9iprem.png)
 1. Request 的 Header cookie 中帶有 token 項目
 2. passport middleware 判斷 token 有效性，無效則回傳 401 Unauthorizes
@@ -148,7 +152,7 @@ OAuth     | Passport
 4. 繼續執行設定的功能
    
 
-### Passport Middleware 設定
+### 3-2：Passport Middleware 設定
 從 Request header 的 cookie 取出 token，由 JwtStrategy 解析 JWT 內容後，存入 req.user 中，供後續 router 使用。
 ```js
 // /config/passport.js
@@ -175,8 +179,8 @@ passport.use(
 );
 ```
 
-### Router 使用 JWT 及權限控制
-在部分需要使用身分認證的 router 中可以加上此 passport jwt 的 middleware 解析 JWT，再使用 JWT payload 儲存的使用者權限判斷是否能進行該操作。
+### 3-3：Router 使用 JWT 及權限控制
+在部分需要使用身分認證的 router 中可以加上此 passport 的 middleware 解析 JWT，再使用 JWT payload 的使用者權限判斷是否能進行該操作。
 
 以教師發布課程的 api 為例
 1. `passport.authenticate` Middleware 解析 JWT
@@ -196,15 +200,235 @@ router.post(
 );
 ```
 
+### 3-4：JWT 失效處理
+我使用 Passport 提供的 `failureRedirect` 功能，設定 Client 端瀏覽比較重要的 page 時需要使用有效的 token，否則會重新引導至 login page 。
 
-## 課程管理後台
+進入 login page 會先清除 storage 舊的登入資料，並顯示錯誤訊息。
 
-## 購物車操作
-
-## 綠界付款
-
-
+>目前的設定 Token 有效 12 小時
 
 
+```js
+// routes > pageRouter.js
 
+/* 需要使用 JWT 驗證才可進入的頁面 */
+/* 例如後台管理頁面 */
+
+const token_fail_msg = "登入權證失效，請重新登入";
+
+router.get(
+  "/backend",
+  passport.authenticate("jwt", {
+    session: false,
+    failureRedirect: `/login?msg=${token_fail_msg}`,
+  }),
+  (req, res) => {
+    res.render("backend.ejs");
+  }
+);
+```
+
+
+## 四、課程管理後台
+此後台僅有教師及管理者可以使用，進行課程新增/修改/刪除等操作。  
+教師進入時會顯示屬於他的所有課程，管理者進入則顯示系統中所有課程。
+> [Course API 的程式碼](https://github.com/qmsiteandy/Course-Site-Fullstack/blob/master/routes/courseRouter.js)  
+
+### 4-1：前端顯示所有課程功能
+瀏覽器進入管理後台頁面時，會依序使用者身分呼叫 API
+- 教師：\<GET\> /api/course/{teacherId} 
+- 管理者：\<GET\> /api/course/
+
+後端透過 MySQL 取得課程資料，並 JOIN user 資料後回傳
+
+```js
+// 取得所有課程
+router.get("/", (req, res, next) => {
+    mysql.query("SELECT course.id, course.name as name, course.description, course.price, user.id as teacherId, user.name as teacherName FROM `course` LEFT JOIN `user` ON course.teacherId = user.id", 
+		(err, result) => {
+      if (err) next(err);
+      else return res.status(200).send(result);
+    });
+  })
+
+// 選取老師的所有課程
+router.get("/teacher/:id", (req, res, next) => {
+  const { id } = req.params;
+  mysql.query(
+    "SELECT course.id, course.name as name, course.description, course.price, user.id as teacherId, user.name as teacherName FROM `course` LEFT JOIN `user` ON course.teacherId = user.id WHERE course_teacherId=?",
+    [id],
+    (err, result) => {
+      if (err) next(err);
+      else return res.status(200).send(result);
+    }
+  );
+});
+```
+當前端取的回傳的資料後使用迴圈將課程一一顯示在 Table 中。如下圖
+![課程管理後台介面](https://i.imgur.com/L4WVwcD.png)
+
+### 4-2：新增課程
+教師帳號可以透過 API \<POST\> /api/course 來新增課程，此 API 運作邏輯如下：
+1. 確認 request header cookie 中的 JWT token 有效
+2. 確認 user.permission 權限是否大於 1 (教師權限)，否則回傳 403 Forbidden
+3. 新增課程資料至 MySQL 資料庫，回傳狀態 201 Created。
+   
+![課程新增介面](https://i.imgur.com/9DZ4zjD.png)
+
+### 4-3：修改、刪除課程
+修改課程與刪除課程同樣需要教師或管理者的權限才可以操作，透過 \<PUT\> /api/course/{id}、\<DELETE\> /api/course/{id}，兩 API 操作，流程如下：
+1. 確認 request header cookie 中的 JWT token 有效
+2. user.permission 如果是教師，將比對此帳號 id 以及課程 teacherId 是否相符；或如果是管理者帳號則允許直接操作。當若權限不足，會回傳 403 Forbidden。
+3. 進行 MySQL 課程資料的修改或刪除，回傳 200 成功。
+   
+![課程修改刪除介面](https://i.imgur.com/yehkZzK.png)
+
+
+## 五、購物車操作
+在這個專案中，我設計使用 **Array 來儲存使用者購物車中的課程編號**，然而 MySQL 關聯性資料庫較不適合儲存陣列資料，因此我搭配 MongoDB 建立 Shopcart 資料表。
+> [Shopcart API 的程式碼](https://github.com/qmsiteandy/Course-Site-Fullstack/blob/master/routes/cartRouter.js)
+> 
+![Shopcart資料表](https://i.imgur.com/Cz02IQv.png)
+
+### 5-1：取得購物車商品資料
+前端透過 API \<GET\> /api/cart 取得購物車資料， router 運作流程如下：
+1. 解析 request 中的 JWT token，將解析的 user 資料存到 req.user 中
+2. 在 MongoDB 的 Shopcart 資料表中找到對應此 user.id 的資料，其中的 courseId_array 項目儲存購物車的課程編號。
+3. 至 MySQL 撈取對應課程編號的課程資料
+4. 回傳狀態 200 及課程資料陣列
+
+### 5-2：新增購物車內容
+前端透過 API \<POST\> /api/cart/{courseId} 新增購物車項目， router 運作流程如下：
+1. 解析 request 中的 JWT token，將解析的 user 資料存到 req.user 中
+2. 限制 req.user.permission 要為 0 (學生)，才可以進行此操作
+3. 使用 mongoose 套件的 `findOneAndUpdate` 功能，尋找此帳號對應的購物車資料，並更新 courseId_array 內容。
+    >其中此步驟加上參數：`$addToSet` 可以將課程編號加入 Array 並且不重複；`upsert: true` 代表當此帳號在 MongoDB 尚未建立對應資料時自動建立。
+    ```js
+    await Cart.findOneAndUpdate(
+        { studentId: req.user.id },
+        {
+          $addToSet: { courseId_array: courseId },
+        },
+        {
+          upsert: true, // 如果沒有這筆 document 自動新增
+          new: true, // 回傳更新後的內容
+        }
+    );
+   ```
+4. 回傳 200 新增成功
+
+### 5-3：刪除購物車內容
+前端透過 API \<DELETE\> /api/cart/{courseId} 刪除購物車項目， router 運作流程如下：
+1. 解析 request 中的 JWT token，將解析的 user 資料存到 req.user 中
+2. 限制 req.user.permission 要為 0 (學生)，才可以進行此操作
+3. 使用 mongoose 套件的 `findOneAndUpdate` 功能，尋找此帳號對應的購物車資料，並更新 courseId_array 內容。
+    >其中此步驟加上參數：`$pull` 可以將課程編號從 Array 中刪除。對比另一個功能 `$pop`， `$pop` 後面需要的是想刪除的資料索引值；`$pull` 比較方便直接填入要刪除的項目內容即可。
+    ```js
+    await Cart.findOneAndUpdate(
+        { studentId: req.user.id },
+        {
+          $pull: { courseId_array: courseId },
+        },
+        {
+          new: true, // 回傳更新後的內容
+        }
+    );
+   ```
+4. 回傳 200 刪除成功
+
+
+## 六、綠界付款
+付款功能使用第三方支付 [綠界科技](https://www.ecpay.com.tw/Service/API_Dwnld) 的 [信用卡一次付清功能](https://developers.ecpay.com.tw/?p=2866) 服務，並搭配官方提供的 [ECPayAIO_Node.js](https://github.com/ECPay/ECPayAIO_Node.js) 套件開發金流串接功能。
+> [綠界付款功能 的程式碼](https://github.com/qmsiteandy/Course-Site-Fullstack/blob/master/routes/ecpayRouter.js)
+
+### 6-1：呼叫付款服務
+建立一個 API \<POST\> /ecpay/submitOrder 用來呼叫付款服務，在此 router 中會進行以下流程：
+1. 解析 JWT token 獲得使用者資訊
+2. 從 Request body 中取得要付款課程編號
+3. 至 MySQL 中撈取這些課程的資訊，並計算總價、建立用於綠介服務的 itemName 字串 (綠界要求如果商品有多項，itemName 需寫成 "#商品A#商品B#商品C" 格式)。
+4. 使用 ecpay_aio_nodejs 中的 ecpay_payment 功能建立付款頁面內容，詳細參數見下方程式：
+   
+   ```js
+    const ecpay_payment = require("../node_modules/ecpay_aio_nodejs/lib/ecpay_payment");
+    const options = require("../node_modules/ecpay_aio_nodejs/conf/config-example"); // 官方提供測試用的店家資訊
+    ...
+
+    // 交易資訊
+    let base_param = {
+        MerchantTradeNo: uuid_20(), // 每筆交易都需要獨特的交易碼 (必須為20碼)
+        MerchantTradeDate: dateString(), // 交易時間(格式為：yyyy/MM/dd HH:mm:ss)
+        TotalAmount: total.toString(), // 交易金額，注意需轉換為 String ！！
+        TradeDesc: "綠界第三方支付", // 交易說明
+        ItemName: itemName, // 顯示商品名稱。如果有多筆，商品名稱以符號#分隔
+        ReturnURL:
+        "https://0d91-117-56-242-145.jp.ngrok.io/ecpay/pay_success", // 為付款結果通知回傳網址，為特店server或主機的URL
+        ClientBackURL: `${process.env.SERVER_URL}/mycourse`, // 前端綠界畫面的"返回商店"按鈕連結
+        CustomField1: req.user.id.toString(), // 使用者編號，需轉換為字串
+        CustomField2: order_courseId_list.toString(), // 購買課程編號，需轉換為字串
+    };
+    // 發票資訊
+    let inv_params = {};
+
+    // 建立綠界付款頁面
+    // option 內容為綠界提供的測試店家資訊
+    const create = new ecpay_payment(options);
+    const htm = create.payment_client.aio_check_out_credit_onetime(
+        base_param,
+        inv_params
+    );
+   ```
+   >注意：  
+   >付款成功後，綠界 Server 會將付款資訊回傳到 `ReturnURL`。然而本專案運行在 Localhost:300，無法從外部連接，因此需要設定 [Ngrok](https://ngrok.com/) 服務來讓外網連接本地的 URL 。
+
+5. 將 htm 資料 res.send 回傳給前端並顯示在頁面上。此時畫面會變成綠界付款頁(本專案使用的是測試介接的設定選項)。
+   ![綠界付款畫面](https://i.imgur.com/srseaLz.png)
+
+
+### 6-2：付款測試
+在測試介街的模式下，官方有提供測試用的新用卡號 ([測試介接資訊](https://developers.ecpay.com.tw/?p=2856))  
+>一般信用卡測試卡號 : 4311-9522-2222-2222  
+>卡片有效期限：隨便輸入只要超過現在都可以  
+>安全碼 : 222  
+>電話：任意有效電話都可以
+
+### 6-3：付款成功後運作
+付款成功後需要將已付款的課程項目從購物車刪除、並新增到我的課程中。  
+
+那要如何讓我們的 Server 知道付款已經完成呢？就得靠第一步建立付款服務時設定的 `ReturnURL` 了。
+
+1. 本專案中待付款完成後，綠界 Server 會將付款資訊傳到 `ReturnURL` ：localhost:3000/ecpay/pay_success。並且 `CustomField` 記錄付款使用者的 id 以及付款的課程編號 (這是在第一步設定的)。
+2. Api router 針對 id 以及 課程編號來修改購物車及我的課程資料。
+3. 最後回傳 "1|OK" 讓綠界 Server 知道付款流程完成。
+   > 詳細一點還需要判斷回傳的 CheckMacValue 驗證碼是否正確 (參考 [驗證碼機制](https://developers.ecpay.com.tw/?p=2902))，但本專案沒做到這塊。
+```js
+router.post("/pay_success", async (req, res, next) => {
+  // 此處未來可以增設驗證機制
+  // 例如使用綠界檢查碼[CheckMacValue]進行確認
+
+  const userId = req.body.CustomField1;
+  const order_courseId_list = req.body.CustomField2.split(","); // 轉換為陣列
+
+  // 移除購物車中已付款項目
+  try {
+    await Cart.findOneAndUpdate(
+      { studentId: userId },
+      { $pull: { courseId_array: { $in: order_courseId_list } } }
+    );
+    // 將已付款項目加入我的課程中
+    await Mycourse.findOneAndUpdate(
+      { studentId: userId },
+      {
+        $addToSet: { courseId_array: { $each: order_courseId_list } },
+      },
+      {
+        upsert: true, // 如果沒有這筆 document 自動新增
+      }
+    );
+  } catch (err) {
+    next(err);
+  }
+
+  res.send("1|OK"); // 回傳讓綠界 Server 知道這筆訂單完成
+});
+```
 
