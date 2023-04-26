@@ -32,6 +32,37 @@ OAuth     | Passport
 ## 資料庫架構
 ![資料庫架構](https://i.imgur.com/HCSb5KC.png)
 
+# 專案建置
+## 環境變數 .env
+```
+MYSQL_HOST = "127.0.0.1"
+MYSQL_USER = "root"
+MYSQL_PASSWORD = ""
+MYSQL_DATABASE = "course_site"
+
+MONGODB_CONNECT_URL = "mongodb://127.0.0.1:27017/course-site"
+
+JWT_SECRET = "secret number"
+
+SESSION_KEY = "session secret"
+
+# Google OAuth
+GOOGLE_CLIENT_ID = ""
+GOOGLE_CLIENT_SECRET = ""
+# Facebook OAuth
+FACEBOOK_APP_ID = ""
+FACEBOOK_APP_SECRET = ""
+
+# Server 路徑
+SERVER_URL = "http://localhost:3000"
+
+# 測試用 JWT token (Never expire)
+TEST_ADMIN_TOKEN = ""
+TEST_STUDENT_TOKEN = ""
+```
+## 執行指令
+- `npm start` 啟動伺服器
+- `npm test` 測試開始
 <!-- -------- -->
 
 # 功能介紹 & 運作邏輯
